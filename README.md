@@ -326,6 +326,24 @@ Invoke-RestMethod "$BASE/api/chat/conversations/$CONV_ID/messages" -Method GET |
 
 > **Nota sobre `curl` en PowerShell**: `curl` es un alias de `Invoke-WebRequest` y **no** soporta opciones como `--data-binary`. Usa **`Invoke-RestMethod`** o el binario de Git Bash **`curl.exe`**.
 
+**Run all tests / Ejecutar todas**  
+```bash
+mvn test
+```
+
+**Run only non-chat tests we added / Solo las pruebas nuevas**  
+```bash
+# Linux/macOS/Git Bash
+mvn "-Dtest=SmokeTest,UserServiceTest,OfferServiceTest,PostServiceTest,JwtUtilTest,UserControllerStandaloneTest,UserControllerListStandaloneTest" test
+
+# Windows PowerShell (nota las comillas)
+mvn "-Dtest=SmokeTest,UserServiceTest,OfferServiceTest,PostServiceTest,JwtUtilTest,UserControllerStandaloneTest,UserControllerListStandaloneTest" test
+```
+
+**Notes**  
+- En PowerShell, el parámetro `-Dtest` debe ir entre **comillas** si pasas una lista separada por comas.  
+- Los tests de controller están hechos en modo **standalone** (no levantan todo el contexto).
+
 ---
 
 ## 9) Troubleshooting / Solución de problemas
