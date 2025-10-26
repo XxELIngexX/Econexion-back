@@ -1,22 +1,32 @@
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\controller\AuthenticationController.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\controller\OfferController.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\controller\PostController.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\controller\UserController.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\dtos\CreateOfferDTO.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\dtos\CreatePostDto.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\EconexionLabApplication.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\model\Conversation.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\model\Message.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\model\Offer.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\model\OfferStatus.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\model\Post.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\model\Role.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\model\User.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\repository\OfferRepository.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\repository\PostRepository.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\repository\UserRepository.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\security\JwtUtil.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\security\SecurityConfig.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\service\OfferService.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\service\PostService.java
-C:\Users\cesar\Documents\Clases 2025-2\IETI\Econexion\src\main\java\io\econexion\service\UserService.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\ChatConversation.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\ChatMessage.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\controller\ChatController.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\dto\ConversationSummaryDTO.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\dto\CreateConversationRequest.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\dto\MessageDTO.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\dto\SendMessageRequest.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\repository\ChatConversationRepository.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\repository\ChatMessageRepository.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\chat\service\ChatService.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\controller\AuthenticationController.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\controller\OfferController.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\controller\PostController.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\controller\UserController.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\dtos\CreateOfferDTO.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\dtos\CreatePostDto.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\EconexionLabApplication.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\model\Conversation.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\model\Message.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\model\Offer.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\model\OfferStatus.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\model\Post.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\model\Role.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\model\User.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\repository\OfferRepository.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\repository\PostRepository.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\repository\UserRepository.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\security\JwtUtil.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\security\SecurityConfig.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\service\OfferService.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\service\PostService.java
+C:\Users\usuario\Downloads\econexion-app-main(9)\econexion-app-main\src\main\java\io\econexion\service\UserService.java
