@@ -273,6 +273,8 @@ Base path: `/lab/users`
 
 ### 8.3 Quick tests (curl / PowerShell)
 
+<img width="1116" height="343" alt="imagen" src="https://github.com/user-attachments/assets/cee60a47-d718-46c0-bbb4-71b985a5a8cd" />
+
 > **Encoding matters**: always send `Content-Type: application/json; charset=utf-8`.  
 > **Importante**: enviar siempre `Content-Type: application/json; charset=utf-8`.
 
