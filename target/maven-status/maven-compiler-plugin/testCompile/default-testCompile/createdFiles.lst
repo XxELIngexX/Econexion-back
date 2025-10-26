@@ -1,0 +1,7 @@
+io\econexion\security\JwtUtilTest.class
+io\econexion\service\OfferServiceTest.class
+io\econexion\controller\UserControllerListStandaloneTest.class
+io\econexion\service\PostServiceTest.class
+io\econexion\service\UserServiceTest.class
+io\econexion\controller\UserControllerStandaloneTest.class
+SmokeTest.class
