@@ -273,6 +273,10 @@ Base path: `/lab/users`
 
 ### 8.3 Quick tests (curl / PowerShell)
 
+<img width="1443" height="495" alt="imagen" src="https://github.com/user-attachments/assets/bc83cb05-6f3b-4b65-877a-2b6f06909957" />
+<img width="1116" height="343" alt="imagen" src="https://github.com/user-attachments/assets/cee60a47-d718-46c0-bbb4-71b985a5a8cd" />
+<img width="1839" height="933" alt="imagen" src="https://github.com/user-attachments/assets/70b90dea-2499-412b-95f7-da4bca7ceb02" />
+
 > **Encoding matters**: always send `Content-Type: application/json; charset=utf-8`.  
 > **Importante**: enviar siempre `Content-Type: application/json; charset=utf-8`.
 
@@ -321,6 +325,24 @@ Invoke-RestMethod "$BASE/api/chat/conversations/$CONV_ID/messages" -Method GET |
 ```
 
 > **Nota sobre `curl` en PowerShell**: `curl` es un alias de `Invoke-WebRequest` y **no** soporta opciones como `--data-binary`. Usa **`Invoke-RestMethod`** o el binario de Git Bash **`curl.exe`**.
+
+**Run all tests / Ejecutar todas**  
+```bash
+mvn test
+```
+
+**Run only non-chat tests we added / Solo las pruebas nuevas**  
+```bash
+# Linux/macOS/Git Bash
+mvn "-Dtest=SmokeTest,UserServiceTest,OfferServiceTest,PostServiceTest,JwtUtilTest,UserControllerStandaloneTest,UserControllerListStandaloneTest" test
+
+# Windows PowerShell (nota las comillas)
+mvn "-Dtest=SmokeTest,UserServiceTest,OfferServiceTest,PostServiceTest,JwtUtilTest,UserControllerStandaloneTest,UserControllerListStandaloneTest" test
+```
+
+**Notes**  
+- En PowerShell, el parámetro `-Dtest` debe ir entre **comillas** si pasas una lista separada por comas.  
+- Los tests de controller están hechos en modo **standalone** (no levantan todo el contexto).
 
 ---
 

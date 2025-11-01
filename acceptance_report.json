@@ -1,0 +1,58 @@
+﻿{
+    "base":  "http://localhost:4000",
+    "passed":  10,
+    "failed":  0,
+    "timestamp":  "2025-10-26T14:54:56",
+    "results":  [
+                    {
+                        "test":  "Health check (/health)",
+                        "ok":  true,
+                        "info":  ""
+                    },
+                    {
+                        "test":  "Mock login A y B",
+                        "ok":  true,
+                        "info":  ""
+                    },
+                    {
+                        "test":  "Crear conversación A→B",
+                        "ok":  true,
+                        "info":  ""
+                    },
+                    {
+                        "test":  "Enviar 2 mensajes",
+                        "ok":  true,
+                        "info":  ""
+                    },
+                    {
+                        "test":  "Listar mensajes por query",
+                        "ok":  true,
+                        "info":  "items=2"
+                    },
+                    {
+                        "test":  "Listar mensajes por alias /:conversationId (opcional)",
+                        "ok":  true,
+                        "info":  "No implementado (404), OK"
+                    },
+                    {
+                        "test":  "Acceso de tercero bloqueado",
+                        "ok":  true,
+                        "info":  "HTTP 404"
+                    },
+                    {
+                        "test":  "AI GET http://localhost:4000/ai/health",
+                        "ok":  true,
+                        "info":  "HTTP 404 (tolerado)"
+                    },
+                    {
+                        "test":  "AI POST http://localhost:4000/ai/index-item",
+                        "ok":  true,
+                        "info":  "HTTP 404 (tolerado)"
+                    },
+                    {
+                        "test":  "AI GET http://localhost:4000/ai/search-text?q=botella%20plastica%20pet\u0026k=5",
+                        "ok":  true,
+                        "info":  "HTTP 404 (tolerado)"
+                    }
+                ]
+}
