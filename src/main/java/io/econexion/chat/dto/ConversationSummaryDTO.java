@@ -2,7 +2,11 @@ package io.econexion.chat.dto;
 
 import java.time.Instant;
 
+/**
+ * DTO que resume una conversación de chat para listar en la interfaz.
+ */
 public class ConversationSummaryDTO {
+
     private final Long conversationId;
     private final Long offerId;
     private final Long participant1Id;
@@ -20,10 +24,32 @@ public class ConversationSummaryDTO {
         this.lastMessagePreview = lastMessagePreview;
     }
 
-    public Long getConversationId() { return conversationId; }
-    public Long getOfferId() { return offerId; }
-    public Long getParticipant1Id() { return participant1Id; }
-    public Long getParticipant2Id() { return participant2Id; }
-    public Instant getUpdatedAt() { return updatedAt; }
-    public String getLastMessagePreview() { return lastMessagePreview; }
+    public Long getConversationId() {
+        return conversationId;
+    }
+
+    public Long getOfferId() {
+        return offerId;
+    }
+
+    public Long getParticipant1Id() {
+        return participant1Id;
+    }
+
+    public Long getParticipant2Id() {
+        return participant2Id;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getLastMessagePreview() {
+        return lastMessagePreview;
+    }
+
+    /** Alias útil para compatibilidad con pruebas (preview en vez de lastMessagePreview). */
+    public String getPreview() {
+        return lastMessagePreview;
+    }
 }

@@ -31,8 +31,8 @@ public class ChatService {
                 .orElseGet(() -> {
                     ChatConversation c = new ChatConversation();
                     c.setOfferId(offerId);
-                    Long p1 = senderId < receiverId ? senderId : receiverId;
-                    Long p2 = senderId < receiverId ? receiverId : senderId;
+                    Long p1 = Math.min(senderId, receiverId);
+                    Long p2 = Math.max(senderId, receiverId);
                     c.setParticipant1Id(p1);
                     c.setParticipant2Id(p2);
                     return conversationRepository.save(c);
@@ -73,7 +73,7 @@ public class ChatService {
 
         return convs.stream().map(c -> {
             String preview = messageRepository.findByConversation_IdOrderByCreatedAtAsc(c.getId()).stream()
-                    .max(Comparator.comparing(ChatMessage::getCreatedAt))
+                    .max(Comparator.comparing(ChatMessage::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())))
                     .map(m -> {
                         String t = m.getText();
                         return t.length() > 80 ? t.substring(0, 80) + "…" : t;
