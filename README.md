@@ -273,6 +273,8 @@ Base path: `/lab/users`
 
 ### 8.3 Quick tests (curl / PowerShell)
 
+ mvn clean test
+ 
 <img width="1443" height="495" alt="imagen" src="https://github.com/user-attachments/assets/bc83cb05-6f3b-4b65-877a-2b6f06909957" />
 <img width="1116" height="343" alt="imagen" src="https://github.com/user-attachments/assets/cee60a47-d718-46c0-bbb4-71b985a5a8cd" />
 <img width="1839" height="933" alt="imagen" src="https://github.com/user-attachments/assets/70b90dea-2499-412b-95f7-da4bca7ceb02" />
