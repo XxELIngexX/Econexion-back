@@ -1,13 +1,12 @@
 package io.econexion.model;
 
 import java.util.*;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-// ROLES -> SELLER, BUYER, ADMIN
 @Data
 @Entity
 @Table(name = "users")
@@ -17,37 +16,45 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @NotBlank(message = "Enterprise name cannot be blank")
     @Column(name = "enterprise_name", nullable = true)
     private String enterpriseName;
 
+    @NotBlank(message = "Username cannot be blank")
     @Column(name = "name", nullable = false)
     private String username;
 
+    @NotBlank(message = "NIT cannot be blank")
     @Column(name = "nit")
     private String nit;
 
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email cannot be blank")
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "Password cannot be blank")
     @Column(name = "password", nullable = false)
     private String password;
 
-    // @Enumerated(EnumType.STRING)
+    @NotBlank(message = "Role cannot be blank")
     @Column(name = "rol", nullable = false)
     private String rol;
 
-@ManyToMany(mappedBy = "participants")
-private List<Conversation> conversations;
+    // === Relaciones ===
 
+    @ManyToMany(mappedBy = "participants")
+    private List<Conversation> conversations = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference("user-posts")
-    private List<Post> publications;
+    private List<Post> publications = new ArrayList<>();
 
     @OneToMany(mappedBy = "offerer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-@JsonManagedReference("user-offers")
+    @JsonManagedReference("user-offers")
+    private List<Offer> offers = new ArrayList<>();
 
-    private List<Offer> offers;
+    // === Constructores ===
 
     public User(String enterpriseName, String username, String nit, String email, String password, String rol) {
         this.enterpriseName = enterpriseName;
@@ -60,5 +67,5 @@ private List<Conversation> conversations;
 
     public User() {
     }
-
 }
+    
