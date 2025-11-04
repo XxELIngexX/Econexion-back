@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Conversation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">econexion-lab</a> &gt; <a href="index.source.html" class="el_package">io.econexion.model</a> &gt; <span class="el_source">Conversation.java</span></div><h1>Conversation.java</h1><pre class="source lang-java linenums">package io.econexion.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.*;
+
+@Entity
+@Table(name = &quot;conversations&quot;)
+@Getter
+<span class="nc" id="L10">@Setter</span>
+<span class="fc" id="L11">@NoArgsConstructor</span>
+<span class="nc" id="L12">@AllArgsConstructor</span>
+public class Conversation {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+<span class="nc" id="L17">    private UUID id;</span>
+
+    // Una conversación está ligada a una oferta específica
+    @OneToOne
+    @JoinColumn(name = &quot;offer_id&quot;, nullable = false)
+<span class="nc" id="L22">    private Offer offer;</span>
+
+    @ManyToMany
+    @JoinTable(name = &quot;conversation_participants&quot;, joinColumns = @JoinColumn(name = &quot;conversation_id&quot;), inverseJoinColumns = @JoinColumn(name = &quot;user_id&quot;))
+<span class="nc" id="L26">    private List&lt;User&gt; participants;;</span>
+
+    // Mensajes enviados en esta conversación
+<span class="pc" id="L29">    @OneToMany(mappedBy = &quot;conversation&quot;, cascade = CascadeType.ALL)</span>
+<span class="nc" id="L30">    private List&lt;Message&gt; messages = new ArrayList&lt;&gt;();</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

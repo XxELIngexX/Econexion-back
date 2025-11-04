@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">econexion-lab</a> &gt; <a href="index.source.html" class="el_package">io.econexion.exception</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package io.econexion.exception;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 🌐 GlobalExceptionHandler — Manejador global de excepciones.
+ * Intercepta y devuelve respuestas JSON limpias y consistentes con códigos HTTP adecuados.
+ */
+@ControllerAdvice
+<span class="fc" id="L25">public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {</span>
+
+    /**
+     * 🧩 Maneja errores de validación @Valid (campos vacíos, formatos incorrectos, etc.)
+     */
+    @Override
+    protected ResponseEntity&lt;Object&gt; handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
+
+<span class="fc" id="L37">        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L38">        body.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L39">        body.put(&quot;status&quot;, HttpStatus.BAD_REQUEST.value());</span>
+<span class="fc" id="L40">        body.put(&quot;error&quot;, &quot;Validación fallida&quot;);</span>
+
+<span class="fc" id="L42">        Map&lt;String, String&gt; fieldErrors = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L43">        ex.getBindingResult().getAllErrors().forEach(err -&gt; {</span>
+<span class="fc" id="L44">            String fieldName = ((FieldError) err).getField();</span>
+<span class="fc" id="L45">            String message = err.getDefaultMessage();</span>
+<span class="fc" id="L46">            fieldErrors.put(fieldName, message);</span>
+<span class="fc" id="L47">        });</span>
+
+<span class="fc" id="L49">        body.put(&quot;fields&quot;, fieldErrors);</span>
+<span class="fc" id="L50">        body.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L51">        return new ResponseEntity&lt;&gt;(body, HttpStatus.BAD_REQUEST);</span>
+    }
+
+    /**
+     * ⚠️ Maneja errores de integridad de datos (duplicados o constraint violation)
+     * Funciona para H2, PostgreSQL y MySQL sin importar el dialecto.
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity&lt;Object&gt; handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
+<span class="nc" id="L60">        Throwable root = getRootCause(ex);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        String message = root.getMessage() != null ? root.getMessage().toLowerCase() : &quot;&quot;;</span>
+
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (root instanceof SQLException ||</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">            message.contains(&quot;unique&quot;) ||</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            message.contains(&quot;duplicate&quot;) ||</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">            message.contains(&quot;constraint&quot;)) {</span>
+
+<span class="nc" id="L68">            Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L69">            body.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="nc" id="L70">            body.put(&quot;status&quot;, HttpStatus.CONFLICT.value());</span>
+<span class="nc" id="L71">            body.put(&quot;error&quot;, &quot;Conflicto de datos&quot;);</span>
+<span class="nc" id="L72">            body.put(&quot;message&quot;, &quot;Violación de integridad: &quot; + root.getMessage());</span>
+<span class="nc" id="L73">            body.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L74">            return new ResponseEntity&lt;&gt;(body, HttpStatus.CONFLICT);</span>
+        }
+
+<span class="nc" id="L77">        return handleGenericException(ex, request);</span>
+    }
+
+    /**
+     * ⚠️ Maneja conflictos lógicos (por ejemplo: usuario ya existe)
+     */
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity&lt;Object&gt; handleIllegalState(IllegalStateException ex, WebRequest request) {
+<span class="fc" id="L85">        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L86">        body.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L87">        body.put(&quot;status&quot;, HttpStatus.CONFLICT.value());</span>
+<span class="fc" id="L88">        body.put(&quot;error&quot;, &quot;Conflicto lógico&quot;);</span>
+<span class="fc" id="L89">        body.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L90">        body.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L91">        return new ResponseEntity&lt;&gt;(body, HttpStatus.CONFLICT);</span>
+    }
+
+    /**
+     * 💥 Maneja cualquier otro error inesperado del sistema
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;Object&gt; handleGenericException(Exception ex, WebRequest request) {
+<span class="nc" id="L99">        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L100">        body.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="nc" id="L101">        body.put(&quot;status&quot;, HttpStatus.INTERNAL_SERVER_ERROR.value());</span>
+<span class="nc" id="L102">        body.put(&quot;error&quot;, &quot;Error interno del servidor&quot;);</span>
+<span class="nc" id="L103">        body.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="nc" id="L104">        body.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="nc" id="L105">        return new ResponseEntity&lt;&gt;(body, HttpStatus.INTERNAL_SERVER_ERROR);</span>
+    }
+
+    /**
+     * 🔍 Obtiene la causa raíz de una excepción anidada.
+     */
+    private Throwable getRootCause(Throwable ex) {
+<span class="nc" id="L112">        Throwable cause = ex.getCause();</span>
+<span class="nc bnc" id="L113" title="All 4 branches missed.">        if (cause == null || cause == ex) return ex;</span>
+<span class="nc" id="L114">        return getRootCause(cause);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

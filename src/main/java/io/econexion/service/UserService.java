@@ -1,28 +1,32 @@
 package io.econexion.service;
 
-import java.util.*;
-import io.econexion.repository.UserRepository;
 import io.econexion.model.User;
+import io.econexion.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;      // <-- import necesario
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile; // <-- import necesario
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
- 
 public class UserService {
-    private final UserRepository repository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository) throws Exception {
+    private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 🧩 Inicializa un usuario administrador por defecto al iniciar la aplicación.
+     */
     @PostConstruct
     public void init() {
-        try {
+        repository.findByEmail("admin@econexia.admin").orElseGet(() -> {
             User newUser = new User(
                     "Econexia",
                     "administrativo",
@@ -31,54 +35,90 @@ public class UserService {
                     passwordEncoder.encode("admin1234"),
                     "admin"
             );
-            repository.save(newUser);
-        }catch (Exception e){
-            System.err.println("Error al crear usuario admin: " + e.getMessage());
-        }
+            return repository.save(newUser);
+        });
     }
 
-    public List<User> findAll() {
+    // === CRUD BÁSICO ===
 
+    public List<User> findAll() {
         return repository.findAll();
     }
 
-    public Optional<User> findById(UUID id) throws Exception {
-        if (!repository.findById(id).isPresent()) {
-            throw new Exception("Usuario no encontrado");
-
-        }
+    public Optional<User> findById(UUID id) {
         return repository.findById(id);
-    }
-
-    public User create(User user) throws Exception {
-        if (findByEmail(user.getEmail()).isPresent()) {
-            throw new Exception("El usuario ya existe");
-        }
-
-        return repository.save(user);
-    }
-
-    public Optional<User> update(UUID id, User newUser) throws Exception {
-        if (!repository.findById(id).isPresent()) {
-            throw new Exception("Usuario no encontrado");
-        }
-        newUser.setId(id);
-        return Optional.of(repository.save(newUser));
-    }
-
-    public boolean delete(UUID id) throws Exception {
-        if (!repository.findById(id).isPresent()) {
-            throw new Exception("EL Id no esta registrado a ningun usuario");
-        }
-        repository.deleteById(id);
-        return true;
     }
 
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email);
     }
 
-    public User update(User user){
+    /**
+     * 🧠 Crea un nuevo usuario con validaciones básicas y encriptación de contraseña.
+     * Lanza IllegalStateException si el email ya existe (409 esperado).
+     */
+    public User create(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("El usuario no puede ser null");
+        }
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            throw new IllegalArgumentException("El email es obligatorio");
+        }
+
+        // ❌ Verificar duplicado
+        repository.findByEmail(user.getEmail()).ifPresent(u -> {
+            throw new IllegalStateException("El email ya está registrado");
+        });
+
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new IllegalArgumentException("La contraseña es obligatoria");
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return repository.save(user);
+    }
+
+    /**
+     * 🔄 Actualiza un usuario existente por ID.
+     */
+    public Optional<User> update(UUID id, User newUser) {
+        if (id == null || newUser == null) return Optional.empty();
+
+        return repository.findById(id).map(existing -> {
+            existing.setEnterpriseName(newUser.getEnterpriseName());
+            existing.setUsername(newUser.getUsername());
+            existing.setNit(newUser.getNit());
+            existing.setEmail(newUser.getEmail());
+            existing.setRol(newUser.getRol());
+
+            if (newUser.getPassword() != null && !newUser.getPassword().isBlank()) {
+                existing.setPassword(passwordEncoder.encode(newUser.getPassword()));
+            }
+
+            return repository.save(existing);
+        });
+    }
+
+    /**
+     * 🗑️ Elimina un usuario si existe.
+     */
+    public boolean delete(UUID id) {
+        if (id == null || !repository.existsById(id)) {
+            return false;
+        }
+        repository.deleteById(id);
+        return true;
+    }
+
+    /**
+     * ⚙️ Actualiza directamente un usuario (para pruebas).
+     */
+    public User update(User user) {
+        if (user == null) throw new IllegalArgumentException("El usuario no puede ser null");
+
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return repository.save(user);
     }
 }

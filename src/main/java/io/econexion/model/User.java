@@ -17,7 +17,7 @@ public class User {
     private UUID id;
 
     @NotBlank(message = "Enterprise name cannot be blank")
-    @Column(name = "enterprise_name", nullable = true)
+    @Column(name = "enterprise_name", nullable = false)
     private String enterpriseName;
 
     @NotBlank(message = "Username cannot be blank")
@@ -25,7 +25,7 @@ public class User {
     private String username;
 
     @NotBlank(message = "NIT cannot be blank")
-    @Column(name = "nit")
+    @Column(name = "nit", nullable = false)
     private String nit;
 
     @Email(message = "Invalid email format")
@@ -68,4 +68,3 @@ public class User {
     public User() {
     }
 }
-    

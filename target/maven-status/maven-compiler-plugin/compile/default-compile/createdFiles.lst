@@ -1,5 +1,6 @@
 io\econexion\security\SecurityConfig.class
 io\econexion\model\Post.class
+io\econexion\exception\GlobalExceptionHandler.class
 io\econexion\security\SecurityConfig$LoginController.class
 io\econexion\service\UserService.class
 io\econexion\model\OfferStatus.class

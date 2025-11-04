@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">econexion-lab</a> &gt; <a href="index.source.html" class="el_package">io.econexion.model</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package io.econexion.model;
+
+import java.util.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+<span class="pc bnc" id="L10" title="All 86 branches missed.">@Data</span>
+@Entity
+@Table(name = &quot;users&quot;)
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+<span class="fc" id="L17">    private UUID id;</span>
+
+    @NotBlank(message = &quot;Enterprise name cannot be blank&quot;)
+    @Column(name = &quot;enterprise_name&quot;, nullable = false)
+<span class="fc" id="L21">    private String enterpriseName;</span>
+
+    @NotBlank(message = &quot;Username cannot be blank&quot;)
+    @Column(name = &quot;name&quot;, nullable = false)
+<span class="fc" id="L25">    private String username;</span>
+
+    @NotBlank(message = &quot;NIT cannot be blank&quot;)
+    @Column(name = &quot;nit&quot;, nullable = false)
+<span class="fc" id="L29">    private String nit;</span>
+
+    @Email(message = &quot;Invalid email format&quot;)
+    @NotBlank(message = &quot;Email cannot be blank&quot;)
+    @Column(name = &quot;email&quot;, nullable = false, unique = true)
+<span class="fc" id="L34">    private String email;</span>
+
+    @NotBlank(message = &quot;Password cannot be blank&quot;)
+    @Column(name = &quot;password&quot;, nullable = false)
+<span class="fc" id="L38">    private String password;</span>
+
+    @NotBlank(message = &quot;Role cannot be blank&quot;)
+    @Column(name = &quot;rol&quot;, nullable = false)
+<span class="fc" id="L42">    private String rol;</span>
+
+    // === Relaciones ===
+
+<span class="fc" id="L46">    @ManyToMany(mappedBy = &quot;participants&quot;)</span>
+<span class="fc" id="L47">    private List&lt;Conversation&gt; conversations = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L49">    @OneToMany(mappedBy = &quot;owner&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)</span>
+    @JsonManagedReference(&quot;user-posts&quot;)
+<span class="fc" id="L51">    private List&lt;Post&gt; publications = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L53">    @OneToMany(mappedBy = &quot;offerer&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)</span>
+    @JsonManagedReference(&quot;user-offers&quot;)
+<span class="fc" id="L55">    private List&lt;Offer&gt; offers = new ArrayList&lt;&gt;();</span>
+
+    // === Constructores ===
+
+<span class="fc" id="L59">    public User(String enterpriseName, String username, String nit, String email, String password, String rol) {</span>
+<span class="fc" id="L60">        this.enterpriseName = enterpriseName;</span>
+<span class="fc" id="L61">        this.username = username;</span>
+<span class="fc" id="L62">        this.nit = nit;</span>
+<span class="fc" id="L63">        this.email = email;</span>
+<span class="fc" id="L64">        this.password = password;</span>
+<span class="fc" id="L65">        this.rol = rol;</span>
+<span class="fc" id="L66">    }</span>
+
+<span class="fc" id="L68">    public User() {</span>
+<span class="fc" id="L69">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

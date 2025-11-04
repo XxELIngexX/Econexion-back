@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OfferController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">econexion-lab</a> &gt; <a href="index.source.html" class="el_package">io.econexion.controller</a> &gt; <span class="el_source">OfferController.java</span></div><h1>OfferController.java</h1><pre class="source lang-java linenums">package io.econexion.controller;
+
+import java.util.UUID;
+
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.econexion.dtos.CreateOfferDTO;
+import io.econexion.model.Offer;
+import io.econexion.model.Post;
+import io.econexion.model.User;
+import io.econexion.security.JwtUtil;
+import io.econexion.service.OfferService;
+import io.econexion.service.PostService;
+import io.econexion.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+
+@RestController
+@RequestMapping(&quot;/offers&quot;)
+public class OfferController {
+    private OfferService offerService;
+    private UserService userservice;
+    private JwtUtil jwtUtil;
+    private PostService postService;
+
+    public OfferController(OfferService offerService, JwtUtil jwtUtil, PostService postService,
+<span class="fc" id="L36">            UserService userservice) {</span>
+<span class="fc" id="L37">        this.offerService = offerService;</span>
+<span class="fc" id="L38">        this.jwtUtil = jwtUtil;</span>
+<span class="fc" id="L39">        this.postService = postService;</span>
+<span class="fc" id="L40">        this.userservice = userservice;</span>
+<span class="fc" id="L41">    }</span>
+    
+    @Operation (summary = &quot;Crear una nueva oferta&quot;,
+            description = &quot;Crea una nueva oferta asociada al usuario autenticado y a una publicación específica&quot;,
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = &quot;200&quot;, description = &quot;Oferta creada exitosamente&quot;),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = &quot;404&quot;, description = &quot;Usuario o publicación no encontrado&quot;)
+            })
+
+    @PostMapping(&quot;/new&quot;)
+    public ResponseEntity&lt;?&gt; createOffer(@RequestBody CreateOfferDTO dto,
+            @RequestHeader(&quot;Authorization&quot;) String userToken) throws Exception {
+<span class="nc" id="L53">        String token = userToken.substring(7);</span>
+<span class="nc" id="L54">        String email = jwtUtil.extractUserName(token);</span>
+<span class="nc" id="L55">        User user = userservice.findByEmail(email)</span>
+<span class="nc" id="L56">                .orElseThrow(() -&gt; new Exception(&quot;Usuario no encontrado&quot;));</span>
+<span class="nc" id="L57">        Post post = postService.findById(dto.getPublicationId());</span>
+
+<span class="nc" id="L59">        Offer offer = new Offer();</span>
+<span class="nc" id="L60">        offer.setAmount(dto.getAmount());</span>
+<span class="nc" id="L61">        offer.setMessage(dto.getMessage());</span>
+<span class="nc" id="L62">        offer.setOfferer(user);</span>
+<span class="nc" id="L63">        offer.setPublication(post);</span>
+<span class="nc" id="L64">        return ResponseEntity.ok(offerService.createOffer(offer));</span>
+    }
+
+    @Operation(summary = &quot;Obtener una oferta por ID&quot;,
+            description = &quot;Recupera los detalles de una oferta específica utilizando su ID&quot;,
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = &quot;200&quot;, description = &quot;Oferta encontrada exitosamente&quot;),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = &quot;404&quot;, description = &quot;Oferta no encontrada&quot;)
+            })
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;?&gt; getOfferById(@PathVariable UUID id) {
+<span class="nc" id="L75">        Offer offer = offerService.findById(id);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (offer == null) {</span>
+<span class="nc" id="L77">            return ResponseEntity.notFound().build();</span>
+        }
+<span class="nc" id="L79">        return ResponseEntity.ok(offer);</span>
+    }
+
+    @Operation(summary = &quot;Eliminar una oferta por ID&quot;,
+            description = &quot;Elimina una oferta específica utilizando su ID&quot;)
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;?&gt; deleteOffer(@PathVariable UUID id) {
+<span class="nc" id="L87">        offerService.deleteOffer(id);</span>
+<span class="nc" id="L88">        return ResponseEntity.ok(&quot;Oferta eliminada correctamente&quot;);</span>
+    }
+
+    @Operation(summary = &quot;Actualizar una oferta&quot;,
+            description = &quot;Actualiza los detalles de una oferta existente&quot;,
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = &quot;200&quot;, description = &quot;Oferta actualizada exitosamente&quot;),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = &quot;404&quot;, description = &quot;Oferta no encontrada&quot;)
+            })
+    @PutMapping(&quot;/update&quot;)
+    public ResponseEntity&lt;?&gt; updateOffer(@RequestBody Offer offer) {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (offerService.findById(offer.getId()) == null) {</span>
+<span class="nc" id="L100">            return ResponseEntity.notFound().build();</span>
+        }
+<span class="nc" id="L102">        return ResponseEntity.ok().body(offerService.createOffer(offer));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
