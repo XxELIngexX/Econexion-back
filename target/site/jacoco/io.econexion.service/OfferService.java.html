@@ -18,12 +18,12 @@ public class OfferService {
 
     public Offer createOffer(Offer ofer) {
 
-<span class="nc" id="L21">        return offerRepository.save(ofer);</span>
+<span class="fc" id="L21">        return offerRepository.save(ofer);</span>
         
     }
 
     public Offer findById(UUID id) {
-<span class="nc" id="L26">        return offerRepository.findById(id).orElse(null);</span>
+<span class="fc" id="L26">        return offerRepository.findById(id).orElse(null);</span>
     }
 
     public void deleteOffer(UUID id) {

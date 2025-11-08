@@ -24,9 +24,7 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    /**
-     * 🧩 Maneja errores de validación @Valid (campos vacíos, formatos incorrectos, etc.)
-     */
+    /** 🧩 Maneja errores de validación @Valid (campos vacíos, formatos incorrectos, etc.) */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -51,10 +49,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    /**
-     * ⚠️ Maneja errores de integridad de datos (duplicados o constraint violation)
-     * Funciona para H2, PostgreSQL y MySQL sin importar el dialecto.
-     */
+    /** ⚠️ Maneja errores de integridad de datos (duplicados o constraint violation) */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
         Throwable root = getRootCause(ex);
@@ -77,9 +72,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleGenericException(ex, request);
     }
 
-    /**
-     * ⚠️ Maneja conflictos lógicos (por ejemplo: usuario ya existe)
-     */
+    /** ⚠️ Maneja conflictos lógicos (por ejemplo: usuario ya existe) */
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Object> handleIllegalState(IllegalStateException ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
@@ -91,9 +84,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
-    /**
-     * 💥 Maneja cualquier otro error inesperado del sistema
-     */
+    /** 💥 Maneja cualquier otro error inesperado del sistema */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
@@ -105,9 +96,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * 🔍 Obtiene la causa raíz de una excepción anidada.
-     */
+    /** 🔍 Obtiene la causa raíz de una excepción anidada. */
     private Throwable getRootCause(Throwable ex) {
         Throwable cause = ex.getCause();
         if (cause == null || cause == ex) return ex;

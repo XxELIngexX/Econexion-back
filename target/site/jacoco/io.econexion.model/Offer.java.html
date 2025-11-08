@@ -10,7 +10,7 @@ import lombok.*;
 
 @Entity
 @Getter
-<span class="nc" id="L13">@Setter</span>
+<span class="pc" id="L13">@Setter</span>
 <span class="fc" id="L14">@NoArgsConstructor</span>
 <span class="nc" id="L15">@AllArgsConstructor</span>
 <span class="nc" id="L16">@Builder</span>
@@ -20,7 +20,7 @@ public class Offer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = &quot;id&quot;, nullable = false)
-<span class="nc" id="L23">    private UUID id;</span>
+<span class="fc" id="L23">    private UUID id;</span>
 
     @Column(name = &quot;amount&quot;, nullable = false)
 <span class="nc" id="L26">    private double amount;</span>

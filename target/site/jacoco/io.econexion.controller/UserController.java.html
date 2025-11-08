@@ -28,11 +28,11 @@ public class UserController {
             description = &quot;Devuelve todos los usuarios almacenados en memoria&quot;)
     @GetMapping
     public ResponseEntity&lt;?&gt; list() {
-<span class="nc" id="L31">        List&lt;User&gt; salida = service.findAll();</span>
-<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (salida.isEmpty()) {</span>
+<span class="fc" id="L31">        List&lt;User&gt; salida = service.findAll();</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">        if (salida.isEmpty()) {</span>
 <span class="nc" id="L33">            return ResponseEntity.notFound().build();</span>
         }
-<span class="nc" id="L35">        return ResponseEntity.ok(salida);</span>
+<span class="fc" id="L35">        return ResponseEntity.ok(salida);</span>
     }
 
     // ✅ 2️⃣ Obtener usuario por ID
@@ -67,8 +67,8 @@ public class UserController {
     @Operation(summary = &quot;Eliminar un usuario&quot;, description = &quot;Elimina un usuario por su UUID&quot;)
     @DeleteMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;?&gt; delete(@PathVariable UUID id) {
-<span class="nc bnc" id="L70" title="All 2 branches missed.">        return service.delete(id)</span>
-<span class="nc" id="L71">                ? ResponseEntity.noContent().build()</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        return service.delete(id)</span>
+<span class="fc" id="L71">                ? ResponseEntity.noContent().build()</span>
 <span class="nc" id="L72">                : ResponseEntity.notFound().build();</span>
     }
 

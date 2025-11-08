@@ -40,10 +40,10 @@ public class AuthenticationController {
 <span class="fc" id="L40">    }</span>
 
     // ==== DTOs ====
-<span class="nc" id="L43">    public record LoginRequest(@NotBlank String email,</span>
+<span class="fc" id="L43">    public record LoginRequest(@NotBlank String email,</span>
                                @NotBlank String password) { }
 
-<span class="nc" id="L46">    public record LoginResponse(String token) { }</span>
+<span class="fc" id="L46">    public record LoginResponse(String token) { }</span>
 
 <span class="nc" id="L48">    public record RegisterRequest(@NotBlank String username,</span>
                                   @NotBlank String password,
@@ -56,18 +56,18 @@ public class AuthenticationController {
     @Operation(summary = &quot;Autenticar usuario&quot;, description = &quot;Recibe email y contraseña y devuelve un JWT&quot;)
     @PostMapping(&quot;/login&quot;)
     public ResponseEntity&lt;?&gt; login(@Valid @RequestBody LoginRequest req) {
-<span class="nc" id="L59">        log.info(&quot;🔐 Intentando autenticar usuario: {}&quot;, req.email());</span>
+<span class="fc" id="L59">        log.info(&quot;🔐 Intentando autenticar usuario: {}&quot;, req.email());</span>
         try {
-<span class="nc" id="L61">            authenticationManager.authenticate(</span>
-<span class="nc" id="L62">                    new UsernamePasswordAuthenticationToken(req.email(), req.password())</span>
+<span class="fc" id="L61">            authenticationManager.authenticate(</span>
+<span class="fc" id="L62">                    new UsernamePasswordAuthenticationToken(req.email(), req.password())</span>
             );
-<span class="nc" id="L64">            String token = jwtUtil.generate(req.email());</span>
-<span class="nc" id="L65">            log.info(&quot;✅ Autenticación exitosa para {}&quot;, req.email());</span>
-<span class="nc" id="L66">            return ResponseEntity.ok(new LoginResponse(token));</span>
-<span class="nc" id="L67">        } catch (BadCredentialsException ex) {</span>
-<span class="nc" id="L68">            log.warn(&quot;❌ Fallo de autenticación para {}: {}&quot;, req.email(), ex.getMessage());</span>
-<span class="nc" id="L69">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
-<span class="nc" id="L70">                    .body(&quot;Usuario o contraseña inválidos&quot;);</span>
+<span class="fc" id="L64">            String token = jwtUtil.generate(req.email());</span>
+<span class="fc" id="L65">            log.info(&quot;✅ Autenticación exitosa para {}&quot;, req.email());</span>
+<span class="fc" id="L66">            return ResponseEntity.ok(new LoginResponse(token));</span>
+<span class="fc" id="L67">        } catch (BadCredentialsException ex) {</span>
+<span class="fc" id="L68">            log.warn(&quot;❌ Fallo de autenticación para {}: {}&quot;, req.email(), ex.getMessage());</span>
+<span class="fc" id="L69">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
+<span class="fc" id="L70">                    .body(&quot;Usuario o contraseña inválidos&quot;);</span>
 <span class="nc" id="L71">        } catch (Exception e) {</span>
 <span class="nc" id="L72">            log.error(&quot;⚠️ Error inesperado en login: {}&quot;, e.getMessage(), e);</span>
 <span class="nc" id="L73">            return ResponseEntity.internalServerError().body(&quot;Error interno al autenticar usuario&quot;);</span>
@@ -78,23 +78,23 @@ public class AuthenticationController {
     @Operation(summary = &quot;Registrar nuevo usuario&quot;, description = &quot;Crea un nuevo usuario y devuelve su información&quot;)
     @PostMapping(&quot;/register&quot;)
     public ResponseEntity&lt;?&gt; register(@Valid @RequestBody User user) {
-<span class="nc" id="L81">        log.info(&quot;🧾 Solicitud de registro recibida para {}&quot;, user.getEmail());</span>
+<span class="fc" id="L81">        log.info(&quot;🧾 Solicitud de registro recibida para {}&quot;, user.getEmail());</span>
         try {
-<span class="nc" id="L83">            Optional&lt;User&gt; existing = userService.findByEmail(user.getEmail());</span>
-<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (existing.isPresent()) {</span>
+<span class="fc" id="L83">            Optional&lt;User&gt; existing = userService.findByEmail(user.getEmail());</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">            if (existing.isPresent()) {</span>
 <span class="nc" id="L85">                log.warn(&quot;⚠️ Intento de registro con email existente: {}&quot;, user.getEmail());</span>
 <span class="nc" id="L86">                return ResponseEntity.badRequest().body(&quot;Email is already in use&quot;);</span>
             }
 
-<span class="nc" id="L89">            user.setPassword(passwordEncoder.encode(user.getPassword()));</span>
-<span class="nc" id="L90">            User newUser = userService.create(user);</span>
-<span class="nc" id="L91">            log.info(&quot;✅ Usuario registrado exitosamente: {}&quot;, newUser.getEmail());</span>
-<span class="nc" id="L92">            return ResponseEntity.ok(newUser);</span>
+<span class="fc" id="L89">            user.setPassword(passwordEncoder.encode(user.getPassword()));</span>
+<span class="fc" id="L90">            User newUser = userService.create(user);</span>
+<span class="fc" id="L91">            log.info(&quot;✅ Usuario registrado exitosamente: {}&quot;, newUser.getEmail());</span>
+<span class="fc" id="L92">            return ResponseEntity.ok(newUser);</span>
 
-<span class="nc" id="L94">        } catch (Exception e) {</span>
-<span class="nc" id="L95">            log.error(&quot;❌ Error al registrar usuario {}: {}&quot;, user.getEmail(), e.getMessage(), e);</span>
-<span class="nc" id="L96">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
-<span class="nc" id="L97">                    .body(&quot;Error creating user: &quot; + e.getMessage());</span>
+<span class="fc" id="L94">        } catch (Exception e) {</span>
+<span class="fc" id="L95">            log.error(&quot;❌ Error al registrar usuario {}: {}&quot;, user.getEmail(), e.getMessage(), e);</span>
+<span class="fc" id="L96">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L97">                    .body(&quot;Error creating user: &quot; + e.getMessage());</span>
         }
     }
 }

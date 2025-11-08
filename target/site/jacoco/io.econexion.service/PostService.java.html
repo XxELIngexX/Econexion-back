@@ -27,19 +27,19 @@ import io.econexion.repository.PostRepository;
     }
    
     public ResponseEntity&lt;?&gt; deletePost(UUID id){
-<span class="nc bnc" id="L30" title="All 2 branches missed.">        if(!postrepository.findById(id).isPresent()){</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        if(!postrepository.findById(id).isPresent()){</span>
 <span class="nc" id="L31">            return ResponseEntity.notFound().build();</span>
         }
-<span class="nc" id="L33">        postrepository.deleteById(id);</span>
-<span class="nc" id="L34">        return ResponseEntity.ok(&quot;post eliminado, correctamente&quot;);</span>
+<span class="fc" id="L33">        postrepository.deleteById(id);</span>
+<span class="fc" id="L34">        return ResponseEntity.ok(&quot;post eliminado, correctamente&quot;);</span>
     }
    
     public ResponseEntity&lt;?&gt; updatePost(Post post){
 
-<span class="nc bnc" id="L39" title="All 2 branches missed.">         if(!postrepository.findById(post.getId()).isPresent()){</span>
-<span class="nc" id="L40">            return ResponseEntity.notFound().build();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">         if(!postrepository.findById(post.getId()).isPresent()){</span>
+<span class="fc" id="L40">            return ResponseEntity.notFound().build();</span>
         }
-<span class="nc" id="L42">        return ResponseEntity.ok().body(postrepository.save(post));</span>
+<span class="fc" id="L42">        return ResponseEntity.ok().body(postrepository.save(post));</span>
 
     }
     

@@ -15,14 +15,14 @@ public class ConversationSummaryDTO {
     private final String lastMessagePreview;
 
     public ConversationSummaryDTO(Long conversationId, Long offerId, Long participant1Id, Long participant2Id,
-<span class="nc" id="L18">                                  Instant updatedAt, String lastMessagePreview) {</span>
-<span class="nc" id="L19">        this.conversationId = conversationId;</span>
-<span class="nc" id="L20">        this.offerId = offerId;</span>
-<span class="nc" id="L21">        this.participant1Id = participant1Id;</span>
-<span class="nc" id="L22">        this.participant2Id = participant2Id;</span>
-<span class="nc" id="L23">        this.updatedAt = updatedAt;</span>
-<span class="nc" id="L24">        this.lastMessagePreview = lastMessagePreview;</span>
-<span class="nc" id="L25">    }</span>
+<span class="fc" id="L18">                                  Instant updatedAt, String lastMessagePreview) {</span>
+<span class="fc" id="L19">        this.conversationId = conversationId;</span>
+<span class="fc" id="L20">        this.offerId = offerId;</span>
+<span class="fc" id="L21">        this.participant1Id = participant1Id;</span>
+<span class="fc" id="L22">        this.participant2Id = participant2Id;</span>
+<span class="fc" id="L23">        this.updatedAt = updatedAt;</span>
+<span class="fc" id="L24">        this.lastMessagePreview = lastMessagePreview;</span>
+<span class="fc" id="L25">    }</span>
 
     public Long getConversationId() {
 <span class="nc" id="L28">        return conversationId;</span>
@@ -50,7 +50,7 @@ public class ConversationSummaryDTO {
 
     /** Alias útil para compatibilidad con pruebas (preview en vez de lastMessagePreview). */
     public String getPreview() {
-<span class="nc" id="L53">        return lastMessagePreview;</span>
+<span class="fc" id="L53">        return lastMessagePreview;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

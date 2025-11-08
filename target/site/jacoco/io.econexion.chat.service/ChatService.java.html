@@ -41,49 +41,49 @@ public class ChatService {
 
     @Transactional
     public MessageDTO sendMessage(Long conversationId, Long senderId, String text) {
-<span class="nc" id="L44">        ChatConversation c = conversationRepository.findById(conversationId)</span>
-<span class="nc" id="L45">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Conversation not found&quot;));</span>
+<span class="fc" id="L44">        ChatConversation c = conversationRepository.findById(conversationId)</span>
+<span class="pc" id="L45">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Conversation not found&quot;));</span>
 
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (!c.involvesUser(senderId)) {</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (!c.involvesUser(senderId)) {</span>
 <span class="nc" id="L48">            throw new IllegalArgumentException(&quot;Sender not in conversation&quot;);</span>
         }
 
-<span class="nc" id="L51">        ChatMessage m = new ChatMessage();</span>
-<span class="nc" id="L52">        m.setConversation(c);</span>
-<span class="nc" id="L53">        m.setSenderId(senderId);</span>
-<span class="nc" id="L54">        m.setText(text);</span>
-<span class="nc" id="L55">        m = messageRepository.save(m);</span>
+<span class="fc" id="L51">        ChatMessage m = new ChatMessage();</span>
+<span class="fc" id="L52">        m.setConversation(c);</span>
+<span class="fc" id="L53">        m.setSenderId(senderId);</span>
+<span class="fc" id="L54">        m.setText(text);</span>
+<span class="fc" id="L55">        m = messageRepository.save(m);</span>
 
-<span class="nc" id="L57">        c.setUpdatedAt(Instant.now());</span>
-<span class="nc" id="L58">        conversationRepository.save(c);</span>
+<span class="fc" id="L57">        c.setUpdatedAt(Instant.now());</span>
+<span class="fc" id="L58">        conversationRepository.save(c);</span>
 
-<span class="nc" id="L60">        return new MessageDTO(m.getId(), m.getSenderId(), m.getText(), m.getCreatedAt());</span>
+<span class="fc" id="L60">        return new MessageDTO(m.getId(), m.getSenderId(), m.getText(), m.getCreatedAt());</span>
     }
 
     @Transactional(readOnly = true)
     public List&lt;MessageDTO&gt; listMessages(Long conversationId) {
-<span class="nc" id="L65">        return messageRepository.findByConversation_IdOrderByCreatedAtAsc(conversationId).stream()</span>
-<span class="nc" id="L66">                .map(m -&gt; new MessageDTO(m.getId(), m.getSenderId(), m.getText(), m.getCreatedAt()))</span>
-<span class="nc" id="L67">                .toList();</span>
+<span class="fc" id="L65">        return messageRepository.findByConversation_IdOrderByCreatedAtAsc(conversationId).stream()</span>
+<span class="pc" id="L66">                .map(m -&gt; new MessageDTO(m.getId(), m.getSenderId(), m.getText(), m.getCreatedAt()))</span>
+<span class="fc" id="L67">                .toList();</span>
     }
 
     @Transactional(readOnly = true)
     public List&lt;ConversationSummaryDTO&gt; listConversations(Long userId) {
-<span class="nc" id="L72">        List&lt;ChatConversation&gt; convs = conversationRepository.findAllByUserOrdered(userId);</span>
+<span class="fc" id="L72">        List&lt;ChatConversation&gt; convs = conversationRepository.findAllByUserOrdered(userId);</span>
 
-<span class="nc" id="L74">        return convs.stream().map(c -&gt; {</span>
-<span class="nc" id="L75">            String preview = messageRepository.findByConversation_IdOrderByCreatedAtAsc(c.getId()).stream()</span>
-<span class="nc" id="L76">                    .max(Comparator.comparing(ChatMessage::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())))</span>
-<span class="nc" id="L77">                    .map(m -&gt; {</span>
-<span class="nc" id="L78">                        String t = m.getText();</span>
-<span class="nc bnc" id="L79" title="All 2 branches missed.">                        return t.length() &gt; 80 ? t.substring(0, 80) + &quot;…&quot; : t;</span>
+<span class="fc" id="L74">        return convs.stream().map(c -&gt; {</span>
+<span class="fc" id="L75">            String preview = messageRepository.findByConversation_IdOrderByCreatedAtAsc(c.getId()).stream()</span>
+<span class="fc" id="L76">                    .max(Comparator.comparing(ChatMessage::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())))</span>
+<span class="fc" id="L77">                    .map(m -&gt; {</span>
+<span class="fc" id="L78">                        String t = m.getText();</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                        return t.length() &gt; 80 ? t.substring(0, 80) + &quot;…&quot; : t;</span>
                     })
-<span class="nc" id="L81">                    .orElse(&quot;&quot;);</span>
-<span class="nc" id="L82">            return new ConversationSummaryDTO(</span>
-<span class="nc" id="L83">                    c.getId(), c.getOfferId(), c.getParticipant1Id(), c.getParticipant2Id(),</span>
-<span class="nc" id="L84">                    c.getUpdatedAt(), preview</span>
+<span class="fc" id="L81">                    .orElse(&quot;&quot;);</span>
+<span class="fc" id="L82">            return new ConversationSummaryDTO(</span>
+<span class="fc" id="L83">                    c.getId(), c.getOfferId(), c.getParticipant1Id(), c.getParticipant2Id(),</span>
+<span class="fc" id="L84">                    c.getUpdatedAt(), preview</span>
             );
-<span class="nc" id="L86">        }).toList();</span>
+<span class="fc" id="L86">        }).toList();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

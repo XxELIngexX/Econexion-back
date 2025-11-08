@@ -13,13 +13,13 @@ import lombok.*;
 
 @Entity
 @Table(name = &quot;publications&quot;)
-<span class="nc bnc" id="L16" title="All 72 branches missed.">@Data</span>
+<span class="pc bnc" id="L16" title="All 72 branches missed.">@Data</span>
 
 public class Post {
     @Id
     @Column(name = &quot;id&quot;, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-<span class="nc" id="L22">    private UUID id;</span>
+<span class="fc" id="L22">    private UUID id;</span>
 
     @NonNull
     @Column(name = &quot;title&quot;, nullable = false)

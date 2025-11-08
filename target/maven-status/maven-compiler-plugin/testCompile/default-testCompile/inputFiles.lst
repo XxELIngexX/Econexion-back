@@ -8,13 +8,15 @@ C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\t
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\controller\UserControllerTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\dtos\CreateOfferDTOTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\dtos\CreatePostDtoTest.java
-C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\dtos\LoginRequest.java
-C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\dtos\RegisterRequest.java
+C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\dtos\LoginRequestDtoTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\EconexionApplicationTests.java
+C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\exception\GlobalExceptionHandlerTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserEqualsHashCodeTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserModelTest.java
+C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserModelValidationTest .java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserValidationTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\repository\UserRepositoryTest.java
+C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\security\AuthIntegrationFlowTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\security\JwtUtilTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\security\LoginControllerTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\security\SecurityConfigTest.java
