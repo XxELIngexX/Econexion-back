@@ -11,7 +11,9 @@ C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\t
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\dtos\LoginRequest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\dtos\RegisterRequest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\EconexionApplicationTests.java
+C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserEqualsHashCodeTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserModelTest.java
+C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserValidationTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\repository\UserRepositoryTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\security\JwtUtilTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\service\OfferServiceTest.java

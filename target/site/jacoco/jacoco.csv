@@ -17,7 +17,7 @@ econexion-lab,io.econexion.security,JwtUtil,34,13,0,0,14,4,3,1,3,1
 econexion-lab,io.econexion.security,SecurityConfig.LoginRequest,9,0,0,0,1,0,1,0,1,0
 econexion-lab,io.econexion.security,SecurityConfig.LoginResponse,6,0,0,0,1,0,1,0,1,0
 econexion-lab,io.econexion.security,SecurityConfig.LoginController,50,0,0,0,12,0,2,0,2,0
-econexion-lab,io.econexion.model,User,378,112,86,0,0,24,50,19,7,19
+econexion-lab,io.econexion.model,User,94,396,52,34,0,24,45,24,3,23
 econexion-lab,io.econexion.model,Message,56,6,0,0,5,3,11,1,11,1
 econexion-lab,io.econexion.model,Offer,93,9,0,0,10,4,18,1,18,1
 econexion-lab,io.econexion.model,Conversation,48,8,0,0,6,2,9,1,9,1

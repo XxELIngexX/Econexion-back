@@ -1,4 +1,6 @@
+io\econexion\model\UserEqualsHashCodeTest.class
 io\econexion\security\JwtUtilTest.class
+io\econexion\model\UserValidationTest.class
 io\econexion\controller\UserControllerIntegrationTest.class
 io\econexion\service\PostServiceTest.class
 io\econexion\EconexionApplicationTests.class
