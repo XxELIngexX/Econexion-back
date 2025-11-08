@@ -7,7 +7,7 @@ econexion-lab,io.econexion.chat.dto,SendMessageRequest,17,0,0,0,5,0,5,0,5,0
 econexion-lab,io.econexion.chat.dto,CreateConversationRequest,31,0,0,0,9,0,9,0,9,0
 econexion-lab,io.econexion.chat.service,ChatService,188,9,4,0,36,4,11,1,9,1
 econexion-lab,io.econexion.service,OfferService,19,6,0,0,4,3,3,1,3,1
-econexion-lab,io.econexion.service,UserService,108,96,21,7,21,19,19,7,5,7
+econexion-lab,io.econexion.service,UserService,16,188,8,20,2,38,10,16,2,10
 econexion-lab,io.econexion.service,PostService,52,3,4,0,9,1,7,1,5,1
 econexion-lab,io.econexion.dtos,CreateOfferDTO,24,0,0,0,5,0,7,0,7,0
 econexion-lab,io.econexion.dtos,CreatePostDto,259,0,42,0,7,0,38,0,17,0
@@ -17,7 +17,7 @@ econexion-lab,io.econexion.security,JwtUtil,34,13,0,0,14,4,3,1,3,1
 econexion-lab,io.econexion.security,SecurityConfig.LoginRequest,9,0,0,0,1,0,1,0,1,0
 econexion-lab,io.econexion.security,SecurityConfig.LoginResponse,6,0,0,0,1,0,1,0,1,0
 econexion-lab,io.econexion.security,SecurityConfig.LoginController,50,0,0,0,12,0,2,0,2,0
-econexion-lab,io.econexion.model,User,382,108,86,0,0,24,51,18,8,18
+econexion-lab,io.econexion.model,User,378,112,86,0,0,24,50,19,7,19
 econexion-lab,io.econexion.model,Message,56,6,0,0,5,3,11,1,11,1
 econexion-lab,io.econexion.model,Offer,93,9,0,0,10,4,18,1,18,1
 econexion-lab,io.econexion.model,Conversation,48,8,0,0,6,2,9,1,9,1
