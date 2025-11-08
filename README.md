@@ -293,6 +293,7 @@ Base path: `/lab/users`
 <img width="1640" height="409" alt="imagen" src="https://github.com/user-attachments/assets/912d2269-45ce-425e-b8ed-83357922da49" />
 <img width="1672" height="370" alt="imagen" src="https://github.com/user-attachments/assets/3c4f510c-eea6-492f-bb0f-6dbb8d490fdb" />
 <img width="1643" height="699" alt="imagen" src="https://github.com/user-attachments/assets/3bb4461f-822d-43a4-8f60-caabe4e85da1" />
+<img width="1919" height="898" alt="imagen" src="https://github.com/user-attachments/assets/5e828d9e-60c9-4083-94fd-eaa8f6c2dc8f" />
 
 > **Encoding matters**: always send `Content-Type: application/json; charset=utf-8`.  
 > **Importante**: enviar siempre `Content-Type: application/json; charset=utf-8`.
