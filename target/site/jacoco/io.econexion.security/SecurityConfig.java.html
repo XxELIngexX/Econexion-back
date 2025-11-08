@@ -112,35 +112,35 @@ import java.util.List;
 
 <span class="fc" id="L113">            String authHeader = req.getHeader(&quot;Authorization&quot;);</span>
 
-<span class="pc bpc" id="L115" title="3 of 4 branches missed.">            if (authHeader != null &amp;&amp; authHeader.startsWith(&quot;Bearer &quot;)) {</span>
-<span class="nc" id="L116">                String token = authHeader.substring(7);</span>
+<span class="pc bpc" id="L115" title="1 of 4 branches missed.">            if (authHeader != null &amp;&amp; authHeader.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="fc" id="L116">                String token = authHeader.substring(7);</span>
 
                 try {
-<span class="nc" id="L119">                    String username = Jwts.parserBuilder()</span>
-<span class="nc" id="L120">                            .setSigningKey(jwtUtil.key())</span>
-<span class="nc" id="L121">                            .build()</span>
-<span class="nc" id="L122">                            .parseClaimsJws(token)</span>
-<span class="nc" id="L123">                            .getBody()</span>
-<span class="nc" id="L124">                            .getSubject();</span>
+<span class="fc" id="L119">                    String username = Jwts.parserBuilder()</span>
+<span class="fc" id="L120">                            .setSigningKey(jwtUtil.key())</span>
+<span class="fc" id="L121">                            .build()</span>
+<span class="fc" id="L122">                            .parseClaimsJws(token)</span>
+<span class="fc" id="L123">                            .getBody()</span>
+<span class="fc" id="L124">                            .getSubject();</span>
 
-<span class="nc" id="L126">                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(</span>
-<span class="nc" id="L127">                            username, null, List.of());</span>
+<span class="fc" id="L126">                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(</span>
+<span class="fc" id="L127">                            username, null, List.of());</span>
 
-<span class="nc" id="L129">                    SecurityContextHolder.getContext().setAuthentication(authentication);</span>
+<span class="fc" id="L129">                    SecurityContextHolder.getContext().setAuthentication(authentication);</span>
 
-<span class="nc" id="L131">                } catch (Exception e) {</span>
-<span class="nc" id="L132">                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, &quot;Invalid token&quot;);</span>
-<span class="nc" id="L133">                    return;</span>
-<span class="nc" id="L134">                }</span>
+<span class="fc" id="L131">                } catch (Exception e) {</span>
+<span class="fc" id="L132">                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, &quot;Invalid token&quot;);</span>
+<span class="fc" id="L133">                    return;</span>
+<span class="fc" id="L134">                }</span>
             }
 <span class="fc" id="L136">            chain.doFilter(req, res);</span>
 <span class="fc" id="L137">        }</span>
     }
 
-<span class="nc" id="L140">    public record LoginRequest(String email, String password) {</span>
+<span class="fc" id="L140">    public record LoginRequest(String email, String password) {</span>
     }
 
-<span class="nc" id="L143">    public record LoginResponse(String token) {</span>
+<span class="fc" id="L143">    public record LoginResponse(String token) {</span>
     }
 
     public static class LoginController {
@@ -148,21 +148,21 @@ import java.util.List;
         private final JwtUtil jwt;
         private final ObjectMapper om;
 
-<span class="nc" id="L151">        public LoginController(AuthenticationManager am, JwtUtil jwt, ObjectMapper om) {</span>
-<span class="nc" id="L152">            this.am = am;</span>
-<span class="nc" id="L153">            this.jwt = jwt;</span>
-<span class="nc" id="L154">            this.om = om;</span>
-<span class="nc" id="L155">        }</span>
+<span class="fc" id="L151">        public LoginController(AuthenticationManager am, JwtUtil jwt, ObjectMapper om) {</span>
+<span class="fc" id="L152">            this.am = am;</span>
+<span class="fc" id="L153">            this.jwt = jwt;</span>
+<span class="fc" id="L154">            this.om = om;</span>
+<span class="fc" id="L155">        }</span>
 
         @org.springframework.web.bind.annotation.PostMapping(value = &quot;/api/auth/login&quot;, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
         public void login(HttpServletRequest req, HttpServletResponse res) throws IOException {
-<span class="nc" id="L159">            LoginRequest body = om.readValue(req.getInputStream(), LoginRequest.class);</span>
-<span class="nc" id="L160">            Authentication auth = am.authenticate(</span>
-<span class="nc" id="L161">                    new UsernamePasswordAuthenticationToken(body.email(), body.password()));</span>
-<span class="nc" id="L162">            String token = jwt.generate(auth.getName());</span>
-<span class="nc" id="L163">            res.setContentType(MediaType.APPLICATION_JSON_VALUE);</span>
-<span class="nc" id="L164">            om.writeValue(res.getOutputStream(), new LoginResponse(token));</span>
-<span class="nc" id="L165">        }</span>
+<span class="fc" id="L159">            LoginRequest body = om.readValue(req.getInputStream(), LoginRequest.class);</span>
+<span class="fc" id="L160">            Authentication auth = am.authenticate(</span>
+<span class="fc" id="L161">                    new UsernamePasswordAuthenticationToken(body.email(), body.password()));</span>
+<span class="fc" id="L162">            String token = jwt.generate(auth.getName());</span>
+<span class="fc" id="L163">            res.setContentType(MediaType.APPLICATION_JSON_VALUE);</span>
+<span class="fc" id="L164">            om.writeValue(res.getOutputStream(), new LoginResponse(token));</span>
+<span class="fc" id="L165">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
