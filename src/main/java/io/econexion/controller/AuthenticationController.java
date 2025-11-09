@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -40,11 +41,8 @@ public class AuthenticationController {
     }
 
     // ==== DTOs ====
-    public record LoginRequest(@NotBlank String email,
-                               @NotBlank String password) { }
-
+    public record LoginRequest(@NotBlank String email, @NotBlank String password) { }
     public record LoginResponse(String token) { }
-
     public record RegisterRequest(@NotBlank String username,
                                   @NotBlank String password,
                                   @NotBlank String email,
@@ -54,7 +52,9 @@ public class AuthenticationController {
 
     // ==== LOGIN ====
     @Operation(summary = "Autenticar usuario", description = "Recibe email y contraseña y devuelve un JWT")
-    @PostMapping("/login")
+    @PostMapping(value = "/login",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req) {
         log.info("🔐 Intentando autenticar usuario: {}", req.email());
         try {
@@ -76,7 +76,9 @@ public class AuthenticationController {
 
     // ==== REGISTER ====
     @Operation(summary = "Registrar nuevo usuario", description = "Crea un nuevo usuario y devuelve su información")
-    @PostMapping("/register")
+    @PostMapping(value = "/register",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> register(@Valid @RequestBody User user) {
         log.info("🧾 Solicitud de registro recibida para {}", user.getEmail());
         try {

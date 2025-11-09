@@ -1,51 +1,76 @@
 package io.econexion.model;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Table(name = "offers")
 public class Offer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @EqualsAndHashCode.Include
     private UUID id;
 
-    @Column(name = "amount", nullable = false)
-    private double amount;
+    // --- Campos “nuevos” ---
+    @NotBlank(message = "Title cannot be blank")
+    @Column(name = "title", nullable = false)
+    private String title;
 
-    @Column(name = "message", columnDefinition = "TEXT")
+    @NotBlank(message = "Description cannot be blank")
+    @Column(name = "description", nullable = false, length = 1000)
+    private String description;
+
+    @NotNull(message = "Price cannot be null")
+    @Column(name = "price", nullable = false)
+    private Double price;
+
+    // --- Compatibilidad con controladores antiguos ---
+    @NotNull(message = "Amount cannot be null")
+    @Column(name = "amount", nullable = false)
+    private Double amount;
+
+    @NotBlank(message = "Message cannot be blank")
+    @Column(name = "message", nullable = false, length = 1000)
     private String message;
 
-    @Column(name = "date", nullable = false, updatable = false)
-    private LocalDateTime date = LocalDateTime.now();
-
-    @ManyToOne
-    @JoinColumn(name = "publication_id", nullable = false)
-    @JsonBackReference("post-offers")
-    private Post publication;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    // Relación con el usuario que ofrece
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     @JsonBackReference("user-offers")
     private User offerer;
 
-    // Offer Status to know if it's accepted, rejected or pending
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private OfferStatus status = OfferStatus.PENDING;
+    // Relación con la publicación asociada
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post publication;
 
-    @OneToOne(mappedBy = "offer", cascade = CascadeType.ALL)
-    private Conversation conversation;
+    public Offer() {}
+
+    public Offer(String title, String description, Double price, User offerer, Post publication) {
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.amount = price;
+        this.message = description;
+        this.offerer = offerer;
+        this.publication = publication;
+    }
+
+    public Offer(Double amount, String message, User offerer, Post publication) {
+        this.amount = amount;
+        this.message = message;
+        this.price = amount;
+        this.description = message;
+        this.title = "Offer";
+        this.offerer = offerer;
+        this.publication = publication;
+    }
 }

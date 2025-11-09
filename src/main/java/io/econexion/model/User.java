@@ -1,7 +1,8 @@
 package io.econexion.model;
 
 import java.util.*;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id
@@ -45,20 +47,21 @@ public class User {
     private String rol;
 
     // === Relaciones ===
+    // Importante: ignorar en JSON para evitar ciclos y errores 415 en deserialización de request bodies
 
     @ManyToMany(mappedBy = "participants")
+    @JsonIgnore
     private List<Conversation> conversations = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference("user-posts")
+    @JsonIgnore
     private List<Post> publications = new ArrayList<>();
 
     @OneToMany(mappedBy = "offerer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference("user-offers")
+    @JsonIgnore
     private List<Offer> offers = new ArrayList<>();
 
     // === Constructores ===
-
     public User(String enterpriseName, String username, String nit, String email, String password, String rol) {
         this.enterpriseName = enterpriseName;
         this.username = username;
@@ -68,6 +71,5 @@ public class User {
         this.rol = rol;
     }
 
-    public User() {
-    }
+    public User() { }
 }

@@ -11,6 +11,9 @@ C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\t
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\dtos\LoginRequestDtoTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\EconexionApplicationTests.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\exception\GlobalExceptionHandlerTest.java
+C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\ConversationModelValidationTest.java
+C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\OfferModelValidationTest.java
+C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\PostModelValidationTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserEqualsHashCodeTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserModelTest.java
 C:\Users\usuario\OneDrive\Documents\Econexion-back-tests(1)\Econexion-back\src\test\java\io\econexion\model\UserModelValidationTest .java

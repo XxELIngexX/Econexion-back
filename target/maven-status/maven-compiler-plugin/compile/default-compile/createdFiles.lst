@@ -29,7 +29,6 @@ io\econexion\repository\UserRepository.class
 io\econexion\model\Role.class
 io\econexion\dtos\RegisterRequest.class
 io\econexion\controller\AuthenticationController$LoginResponse.class
-io\econexion\model\Offer$OfferBuilder.class
 io\econexion\security\SecurityConfig$LoginResponse.class
 io\econexion\chat\ChatConversation.class
 io\econexion\model\Conversation.class

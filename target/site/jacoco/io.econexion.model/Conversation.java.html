@@ -4,29 +4,35 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.*;
 
+<span class="pc" id="L7">@Data</span>
+<span class="pc bpc" id="L8" title="7 of 14 branches missed.">@EqualsAndHashCode(onlyExplicitlyIncluded = true)</span>
 @Entity
 @Table(name = &quot;conversations&quot;)
-@Getter
-<span class="nc" id="L10">@Setter</span>
 <span class="fc" id="L11">@NoArgsConstructor</span>
 <span class="nc" id="L12">@AllArgsConstructor</span>
 public class Conversation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-<span class="nc" id="L17">    private UUID id;</span>
+    @EqualsAndHashCode.Include
+<span class="fc" id="L18">    private UUID id;</span>
 
     // Una conversación está ligada a una oferta específica
     @OneToOne
     @JoinColumn(name = &quot;offer_id&quot;, nullable = false)
-<span class="nc" id="L22">    private Offer offer;</span>
+<span class="nc" id="L23">    private Offer offer;</span>
 
-    @ManyToMany
-    @JoinTable(name = &quot;conversation_participants&quot;, joinColumns = @JoinColumn(name = &quot;conversation_id&quot;), inverseJoinColumns = @JoinColumn(name = &quot;user_id&quot;))
-<span class="nc" id="L26">    private List&lt;User&gt; participants;;</span>
+    // Participantes (usuarios involucrados)
+<span class="pc" id="L26">    @ManyToMany</span>
+    @JoinTable(
+        name = &quot;conversation_participants&quot;,
+        joinColumns = @JoinColumn(name = &quot;conversation_id&quot;),
+        inverseJoinColumns = @JoinColumn(name = &quot;user_id&quot;)
+    )
+<span class="nc" id="L32">    private List&lt;User&gt; participants = new ArrayList&lt;&gt;();</span>
 
     // Mensajes enviados en esta conversación
-<span class="pc" id="L29">    @OneToMany(mappedBy = &quot;conversation&quot;, cascade = CascadeType.ALL)</span>
-<span class="nc" id="L30">    private List&lt;Message&gt; messages = new ArrayList&lt;&gt;();</span>
+<span class="pc" id="L35">    @OneToMany(mappedBy = &quot;conversation&quot;, cascade = CascadeType.ALL, orphanRemoval = true)</span>
+<span class="nc" id="L36">    private List&lt;Message&gt; messages = new ArrayList&lt;&gt;();</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

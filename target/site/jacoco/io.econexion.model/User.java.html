@@ -1,74 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">econexion-lab</a> &gt; <a href="index.source.html" class="el_package">io.econexion.model</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package io.econexion.model;
 
 import java.util.*;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-<span class="fc" id="L11">@Data</span>
-<span class="pc bpc" id="L12" title="7 of 14 branches missed.">@EqualsAndHashCode(onlyExplicitlyIncluded = true)</span>
+<span class="pc" id="L12">@Data</span>
+<span class="pc bpc" id="L13" title="7 of 14 branches missed.">@EqualsAndHashCode(onlyExplicitlyIncluded = true)</span>
 @Entity
 @Table(name = &quot;users&quot;)
+@JsonIgnoreProperties({&quot;hibernateLazyInitializer&quot;, &quot;handler&quot;})
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @EqualsAndHashCode.Include
-<span class="fc" id="L20">    private UUID id;</span>
+<span class="fc" id="L22">    private UUID id;</span>
 
     @NotBlank(message = &quot;Enterprise name cannot be blank&quot;)
     @Column(name = &quot;enterprise_name&quot;, nullable = false)
-<span class="fc" id="L24">    private String enterpriseName;</span>
+<span class="fc" id="L26">    private String enterpriseName;</span>
 
     @NotBlank(message = &quot;Username cannot be blank&quot;)
     @Column(name = &quot;name&quot;, nullable = false)
-<span class="fc" id="L28">    private String username;</span>
+<span class="fc" id="L30">    private String username;</span>
 
     @NotBlank(message = &quot;NIT cannot be blank&quot;)
     @Column(name = &quot;nit&quot;, nullable = false)
-<span class="fc" id="L32">    private String nit;</span>
+<span class="fc" id="L34">    private String nit;</span>
 
     @Email(message = &quot;Invalid email format&quot;)
     @NotBlank(message = &quot;Email cannot be blank&quot;)
     @Column(name = &quot;email&quot;, nullable = false, unique = true)
-<span class="fc" id="L37">    private String email;</span>
+<span class="fc" id="L39">    private String email;</span>
 
     @NotBlank(message = &quot;Password cannot be blank&quot;)
     @Column(name = &quot;password&quot;, nullable = false)
-<span class="fc" id="L41">    private String password;</span>
+<span class="fc" id="L43">    private String password;</span>
 
     @NotBlank(message = &quot;Role cannot be blank&quot;)
     @Column(name = &quot;rol&quot;, nullable = false)
-<span class="fc" id="L45">    private String rol;</span>
+<span class="fc" id="L47">    private String rol;</span>
 
     // === Relaciones ===
+    // Importante: ignorar en JSON para evitar ciclos y errores 415 en deserialización de request bodies
 
-<span class="fc" id="L49">    @ManyToMany(mappedBy = &quot;participants&quot;)</span>
-<span class="fc" id="L50">    private List&lt;Conversation&gt; conversations = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L52">    @ManyToMany(mappedBy = &quot;participants&quot;)</span>
+    @JsonIgnore
+<span class="fc" id="L54">    private List&lt;Conversation&gt; conversations = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L52">    @OneToMany(mappedBy = &quot;owner&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)</span>
-    @JsonManagedReference(&quot;user-posts&quot;)
-<span class="fc" id="L54">    private List&lt;Post&gt; publications = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L56">    @OneToMany(mappedBy = &quot;owner&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)</span>
+    @JsonIgnore
+<span class="fc" id="L58">    private List&lt;Post&gt; publications = new ArrayList&lt;&gt;();</span>
 
-<span class="fc" id="L56">    @OneToMany(mappedBy = &quot;offerer&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)</span>
-    @JsonManagedReference(&quot;user-offers&quot;)
-<span class="fc" id="L58">    private List&lt;Offer&gt; offers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L60">    @OneToMany(mappedBy = &quot;offerer&quot;, cascade = CascadeType.ALL, fetch = FetchType.LAZY)</span>
+    @JsonIgnore
+<span class="fc" id="L62">    private List&lt;Offer&gt; offers = new ArrayList&lt;&gt;();</span>
 
     // === Constructores ===
-
-<span class="fc" id="L62">    public User(String enterpriseName, String username, String nit, String email, String password, String rol) {</span>
-<span class="fc" id="L63">        this.enterpriseName = enterpriseName;</span>
-<span class="fc" id="L64">        this.username = username;</span>
-<span class="fc" id="L65">        this.nit = nit;</span>
-<span class="fc" id="L66">        this.email = email;</span>
-<span class="fc" id="L67">        this.password = password;</span>
-<span class="fc" id="L68">        this.rol = rol;</span>
-<span class="fc" id="L69">    }</span>
-
-<span class="fc" id="L71">    public User() {</span>
+<span class="fc" id="L65">    public User(String enterpriseName, String username, String nit, String email, String password, String rol) {</span>
+<span class="fc" id="L66">        this.enterpriseName = enterpriseName;</span>
+<span class="fc" id="L67">        this.username = username;</span>
+<span class="fc" id="L68">        this.nit = nit;</span>
+<span class="fc" id="L69">        this.email = email;</span>
+<span class="fc" id="L70">        this.password = password;</span>
+<span class="fc" id="L71">        this.rol = rol;</span>
 <span class="fc" id="L72">    }</span>
+
+<span class="fc" id="L74">    public User() { }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

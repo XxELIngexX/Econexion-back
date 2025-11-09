@@ -2,10 +2,12 @@ io\econexion\model\UserEqualsHashCodeTest.class
 io\econexion\security\LoginControllerTest$2.class
 io\econexion\controller\UserControllerIntegrationTest.class
 io\econexion\EconexionApplicationTests.class
+io\econexion\model\OfferModelValidationTest.class
 io\econexion\exception\GlobalExceptionHandlerTest.class
 io\econexion\service\UserServiceTest.class
 io\econexion\chat\ChatServiceTest.class
 io\econexion\controller\AuthenticationControllerTest.class
+io\econexion\model\ConversationModelValidationTest.class
 io\econexion\model\UserModelValidationTest.class
 io\econexion\service\OfferServiceTest.class
 io\econexion\repository\UserRepositoryTest.class
@@ -24,6 +26,7 @@ io\econexion\controller\UserControllerTest.class
 io\econexion\dtos\CreateOfferDTOTest.class
 io\econexion\controller\AuthenticationControllerValidationTest.class
 io\econexion\security\SecurityConfigTest.class
+io\econexion\model\PostModelValidationTest.class
 io\econexion\controller\UserControllerListStandaloneTest.class
 io\econexion\security\SimpleJwtFilterTest.class
 io\econexion\security\AuthIntegrationFlowTest$1.class

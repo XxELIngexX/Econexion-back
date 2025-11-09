@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-<span class="fc" id="L21">@Slf4j</span>
+<span class="fc" id="L22">@Slf4j</span>
 @RestController
 @RequestMapping(&quot;/api/auth&quot;)
 @Tag(name = &quot;Autenticación&quot;, description = &quot;Endpoints para login y registro de usuarios&quot;)
@@ -32,20 +33,17 @@ public class AuthenticationController {
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     JwtUtil jwtUtil,
                                     UserService userService,
-<span class="fc" id="L35">                                    PasswordEncoder passwordEncoder) {</span>
-<span class="fc" id="L36">        this.authenticationManager = authenticationManager;</span>
-<span class="fc" id="L37">        this.jwtUtil = jwtUtil;</span>
-<span class="fc" id="L38">        this.userService = userService;</span>
-<span class="fc" id="L39">        this.passwordEncoder = passwordEncoder;</span>
-<span class="fc" id="L40">    }</span>
+<span class="fc" id="L36">                                    PasswordEncoder passwordEncoder) {</span>
+<span class="fc" id="L37">        this.authenticationManager = authenticationManager;</span>
+<span class="fc" id="L38">        this.jwtUtil = jwtUtil;</span>
+<span class="fc" id="L39">        this.userService = userService;</span>
+<span class="fc" id="L40">        this.passwordEncoder = passwordEncoder;</span>
+<span class="fc" id="L41">    }</span>
 
     // ==== DTOs ====
-<span class="fc" id="L43">    public record LoginRequest(@NotBlank String email,</span>
-                               @NotBlank String password) { }
-
-<span class="fc" id="L46">    public record LoginResponse(String token) { }</span>
-
-<span class="nc" id="L48">    public record RegisterRequest(@NotBlank String username,</span>
+<span class="fc" id="L44">    public record LoginRequest(@NotBlank String email, @NotBlank String password) { }</span>
+<span class="fc" id="L45">    public record LoginResponse(String token) { }</span>
+<span class="nc" id="L46">    public record RegisterRequest(@NotBlank String username,</span>
                                   @NotBlank String password,
                                   @NotBlank String email,
                                   @NotBlank String enterpriseName,
@@ -54,7 +52,9 @@ public class AuthenticationController {
 
     // ==== LOGIN ====
     @Operation(summary = &quot;Autenticar usuario&quot;, description = &quot;Recibe email y contraseña y devuelve un JWT&quot;)
-    @PostMapping(&quot;/login&quot;)
+    @PostMapping(value = &quot;/login&quot;,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity&lt;?&gt; login(@Valid @RequestBody LoginRequest req) {
 <span class="fc" id="L59">        log.info(&quot;🔐 Intentando autenticar usuario: {}&quot;, req.email());</span>
         try {
@@ -76,25 +76,27 @@ public class AuthenticationController {
 
     // ==== REGISTER ====
     @Operation(summary = &quot;Registrar nuevo usuario&quot;, description = &quot;Crea un nuevo usuario y devuelve su información&quot;)
-    @PostMapping(&quot;/register&quot;)
+    @PostMapping(value = &quot;/register&quot;,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity&lt;?&gt; register(@Valid @RequestBody User user) {
-<span class="fc" id="L81">        log.info(&quot;🧾 Solicitud de registro recibida para {}&quot;, user.getEmail());</span>
+<span class="fc" id="L83">        log.info(&quot;🧾 Solicitud de registro recibida para {}&quot;, user.getEmail());</span>
         try {
-<span class="fc" id="L83">            Optional&lt;User&gt; existing = userService.findByEmail(user.getEmail());</span>
-<span class="pc bpc" id="L84" title="1 of 2 branches missed.">            if (existing.isPresent()) {</span>
-<span class="nc" id="L85">                log.warn(&quot;⚠️ Intento de registro con email existente: {}&quot;, user.getEmail());</span>
-<span class="nc" id="L86">                return ResponseEntity.badRequest().body(&quot;Email is already in use&quot;);</span>
+<span class="fc" id="L85">            Optional&lt;User&gt; existing = userService.findByEmail(user.getEmail());</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            if (existing.isPresent()) {</span>
+<span class="fc" id="L87">                log.warn(&quot;⚠️ Intento de registro con email existente: {}&quot;, user.getEmail());</span>
+<span class="fc" id="L88">                return ResponseEntity.badRequest().body(&quot;Email is already in use&quot;);</span>
             }
 
-<span class="fc" id="L89">            user.setPassword(passwordEncoder.encode(user.getPassword()));</span>
-<span class="fc" id="L90">            User newUser = userService.create(user);</span>
-<span class="fc" id="L91">            log.info(&quot;✅ Usuario registrado exitosamente: {}&quot;, newUser.getEmail());</span>
-<span class="fc" id="L92">            return ResponseEntity.ok(newUser);</span>
+<span class="fc" id="L91">            user.setPassword(passwordEncoder.encode(user.getPassword()));</span>
+<span class="fc" id="L92">            User newUser = userService.create(user);</span>
+<span class="fc" id="L93">            log.info(&quot;✅ Usuario registrado exitosamente: {}&quot;, newUser.getEmail());</span>
+<span class="fc" id="L94">            return ResponseEntity.ok(newUser);</span>
 
-<span class="fc" id="L94">        } catch (Exception e) {</span>
-<span class="fc" id="L95">            log.error(&quot;❌ Error al registrar usuario {}: {}&quot;, user.getEmail(), e.getMessage(), e);</span>
-<span class="fc" id="L96">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
-<span class="fc" id="L97">                    .body(&quot;Error creating user: &quot; + e.getMessage());</span>
+<span class="fc" id="L96">        } catch (Exception e) {</span>
+<span class="fc" id="L97">            log.error(&quot;❌ Error al registrar usuario {}: {}&quot;, user.getEmail(), e.getMessage(), e);</span>
+<span class="fc" id="L98">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L99">                    .body(&quot;Error creating user: &quot; + e.getMessage());</span>
         }
     }
 }
