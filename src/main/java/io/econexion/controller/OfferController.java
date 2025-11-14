@@ -1,5 +1,6 @@
 package io.econexion.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
@@ -100,5 +101,25 @@ public class OfferController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(offerService.createOffer(offer));
+    }
+
+    @GetMapping("/received")  // Nuevo: Offers received (on my posts)
+    @Operation(summary = "Obtener offers recibidas", description = "Offers en posts del user")
+    public ResponseEntity<List<Offer>> getReceivedOffers(@RequestHeader("Authorization") String userToken) throws Exception {
+        String token = userToken.substring(7);
+        String email = jwtUtil.extractUserName(token);
+        User user = userservice.findByEmail(email)
+                .orElseThrow(() -> new Exception("Usuario no encontrado"));
+        return ResponseEntity.ok(offerService.findByPublicationOwner(user));
+    }
+
+    @GetMapping("/sent")  // Nuevo: Offers sent by me
+    @Operation(summary = "Obtener offers enviadas", description = "Offers hechas por el user")
+    public ResponseEntity<List<Offer>> getSentOffers(@RequestHeader("Authorization") String userToken) throws Exception {
+        String token = userToken.substring(7);
+        String email = jwtUtil.extractUserName(token);
+        User user = userservice.findByEmail(email)
+                .orElseThrow(() -> new Exception("Usuario no encontrado"));
+        return ResponseEntity.ok(offerService.findByOfferer(user));
     }
 }

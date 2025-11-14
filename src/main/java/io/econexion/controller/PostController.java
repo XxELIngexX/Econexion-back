@@ -1,6 +1,7 @@
 package io.econexion.controller;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -95,10 +96,11 @@ public class PostController {
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = Post.class))),
                     @ApiResponse(responseCode = "404", description = "Post no encontrado")})
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> getPostById(@RequestBody UUID id) throws NotFoundException {
             return ResponseEntity.ok().body(postservice.findById(id));
     }
+
 
     @Operation(summary = "Actualizar un post",
             description = "Actualiza un post existente",
@@ -123,5 +125,21 @@ public class PostController {
     public ResponseEntity<?> deletePost(@RequestBody UUID id) {
         postservice.deletePost(id);
         return ResponseEntity.ok().body("Post eliminado");
+    }
+
+    @GetMapping("/all")  // Cambiado: GET /posts para list all (remueve @RequestBody UUID id)
+    @Operation(summary = "Obtener todos los posts", description = "Lista todos los lotes publicados (público)")
+    public ResponseEntity<List<Post>> getAllPosts() {
+        return ResponseEntity.ok(postservice.getAllPosts());
+    }
+
+    @GetMapping("/my")  // Nuevo: Get my posts
+    @Operation(summary = "Obtener mis posts", description = "Devuelve posts del user autenticado")
+    public ResponseEntity<List<Post>> getMyPosts(@RequestHeader("Authorization") String userToken) throws Exception {
+        String token = userToken.substring(7);
+        String email = jwtUtil.extractUserName(token);
+        User user = userservice.findByEmail(email)
+                .orElseThrow(() -> new Exception("Usuario no encontrado"));
+        return ResponseEntity.ok(postservice.findByOwner(user));
     }
 }

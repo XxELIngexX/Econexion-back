@@ -1,7 +1,9 @@
 package io.econexion.service;
 
+import java.util.List;
 import java.util.UUID;
 
+import io.econexion.model.User;
 import org.springframework.stereotype.Service;
 
 import io.econexion.dtos.CreateOfferDTO;
@@ -17,9 +19,7 @@ public class OfferService {
     }
 
     public Offer createOffer(Offer ofer) {
-
         return offerRepository.save(ofer);
-        
     }
 
     public Offer findById(UUID id) {
@@ -28,9 +28,13 @@ public class OfferService {
 
     public void deleteOffer(UUID id) {
         offerRepository.deleteById(id);
-        
     }
 
+    public List<Offer> findByPublicationOwner(User owner) {
+        return offerRepository.findByPublicationOwner(owner);
+    }
 
-    
+    public List<Offer> findByOfferer(User offerer) {
+        return offerRepository.findByOfferer(offerer);
+    }
 }
