@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID; // Nuevo import para UUID
 
 @Slf4j
 @RestController
@@ -61,7 +62,16 @@ public class AuthenticationController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(req.email(), req.password())
             );
-            String token = jwtUtil.generate(req.email());
+
+            Optional<User> optionalUser = userService.findByEmail(req.email());
+            if (optionalUser.isEmpty()) {
+                log.warn("⚠️ Usuario autenticado pero no encontrado en DB: {}", req.email());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error interno: Usuario no encontrado post-autenticación");
+            }
+            User user = optionalUser.get();
+
+            String token = jwtUtil.generate(user);  // Modificado: Pasa User completo
             log.info("✅ Autenticación exitosa para {}", req.email());
             return ResponseEntity.ok(new LoginResponse(token));
         } catch (BadCredentialsException ex) {
@@ -77,22 +87,31 @@ public class AuthenticationController {
     // ==== REGISTER ====
     @Operation(summary = "Registrar nuevo usuario", description = "Crea un nuevo usuario y devuelve su información")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody User user) {
-        log.info("🧾 Solicitud de registro recibida para {}", user.getEmail());
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) { // Cambiado a RegisterRequest
+        log.info("🧾 Solicitud de registro recibida para {}", request.email());
         try {
-            Optional<User> existing = userService.findByEmail(user.getEmail());
+            Optional<User> existing = userService.findByEmail(request.email());
             if (existing.isPresent()) {
-                log.warn("⚠️ Intento de registro con email existente: {}", user.getEmail());
+                log.warn("⚠️ Intento de registro con email existente: {}", request.email());
                 return ResponseEntity.badRequest().body("Email is already in use");
             }
 
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            // Nuevo: Mapear DTO a User
+            User user = new User();
+            user.setId(UUID.randomUUID()); // Asumiendo ID generado aquí
+            user.setUsername(request.username());
+            user.setEmail(request.email());
+            user.setPassword(passwordEncoder.encode(request.password()));
+            user.setEnterpriseName(request.enterpriseName());
+            user.setNit(request.nit());
+            user.setRol(request.rol().toUpperCase()); // Convierte String a Enum
+
             User newUser = userService.create(user);
             log.info("✅ Usuario registrado exitosamente: {}", newUser.getEmail());
             return ResponseEntity.ok(newUser);
 
         } catch (Exception e) {
-            log.error("❌ Error al registrar usuario {}: {}", user.getEmail(), e.getMessage(), e);
+            log.error("❌ Error al registrar usuario {}: {}", request.email(), e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error creating user: " + e.getMessage());
         }

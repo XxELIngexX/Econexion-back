@@ -11,14 +11,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +26,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
 import java.util.List;
@@ -76,7 +77,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, SimpleJwtFilter jwtFilter) throws Exception {
         // Para demo/lab
         http.csrf(csrf -> csrf.disable());
-
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/v1/weather/**").permitAll()
@@ -89,6 +90,47 @@ public class SecurityConfig {
 
         http.addFilterBefore(jwtFilter, BasicAuthenticationFilter.class);
         return http.build();
+    }
+
+    // Nuevo: Bean para configuración global de CORS
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Orígenes permitidos: Ajusta según tu setup dev (Expo puertos comunes + emulador)
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:8081",    // Expo dev server
+                "http://localhost:19000",   // Expo Go / web
+                "http://localhost:19006",   // Expo alternativo
+                "http://10.0.2.2:35000",    // Emulador Android
+                "http://localhost"          // Pruebas generales
+        ));
+
+        // Métodos permitidos: Cubre CRUD + OPTIONS
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
+        // Headers permitidos: Incluye Authorization para JWT
+        configuration.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With",
+                "Accept",
+                "Origin"
+        ));
+
+        // Expose headers: Para que frontend lea Authorization si aplica
+        configuration.setExposedHeaders(List.of("Authorization"));
+
+        // Credentials: True para flexibilidad con JWT
+        configuration.setAllowCredentials(true);
+
+        // Cache preflight: 1 hora
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Aplica a todos los endpoints
+
+        return source;
     }
 
     // @Bean
@@ -134,34 +176,6 @@ public class SecurityConfig {
                 }
             }
             chain.doFilter(req, res);
-        }
-    }
-
-    public record LoginRequest(String email, String password) {
-    }
-
-    public record LoginResponse(String token) {
-    }
-
-    public static class LoginController {
-        private final AuthenticationManager am;
-        private final JwtUtil jwt;
-        private final ObjectMapper om;
-
-        public LoginController(AuthenticationManager am, JwtUtil jwt, ObjectMapper om) {
-            this.am = am;
-            this.jwt = jwt;
-            this.om = om;
-        }
-
-        @org.springframework.web.bind.annotation.PostMapping(value = "/api/auth/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-        public void login(HttpServletRequest req, HttpServletResponse res) throws IOException {
-            LoginRequest body = om.readValue(req.getInputStream(), LoginRequest.class);
-            Authentication auth = am.authenticate(
-                    new UsernamePasswordAuthenticationToken(body.email(), body.password()));
-            String token = jwt.generate(auth.getName());
-            res.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            om.writeValue(res.getOutputStream(), new LoginResponse(token));
         }
     }
 }

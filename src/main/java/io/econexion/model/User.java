@@ -36,17 +36,15 @@ public class User {
     @Column(name = "rol", nullable = false)
     private String rol;
 
-@ManyToMany(mappedBy = "participants")
-private List<Conversation> conversations;
-
+    @ManyToMany(mappedBy = "participants")
+    private List<Conversation> conversations;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference("user-posts")
     private List<Post> publications;
 
     @OneToMany(mappedBy = "offerer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-@JsonManagedReference("user-offers")
-
+    @JsonManagedReference("user-offers")
     private List<Offer> offers;
 
     public User(String enterpriseName, String username, String nit, String email, String password, String rol) {
