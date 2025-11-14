@@ -42,7 +42,7 @@ public class AuthenticationController {
 
     // ==== DTOs ====
 <span class="fc" id="L44">    public record LoginRequest(@NotBlank String email, @NotBlank String password) { }</span>
-<span class="fc" id="L45">    public record LoginResponse(String token) { }</span>
+<span class="nc" id="L45">    public record LoginResponse(String token) { }</span>
 <span class="nc" id="L46">    public record RegisterRequest(@NotBlank String username,</span>
                                   @NotBlank String password,
                                   @NotBlank String email,
@@ -56,18 +56,18 @@ public class AuthenticationController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity&lt;?&gt; login(@Valid @RequestBody LoginRequest req) {
-<span class="fc" id="L59">        log.info(&quot;🔐 Intentando autenticar usuario: {}&quot;, req.email());</span>
+<span class="nc" id="L59">        log.info(&quot;🔐 Intentando autenticar usuario: {}&quot;, req.email());</span>
         try {
-<span class="fc" id="L61">            authenticationManager.authenticate(</span>
-<span class="fc" id="L62">                    new UsernamePasswordAuthenticationToken(req.email(), req.password())</span>
+<span class="nc" id="L61">            authenticationManager.authenticate(</span>
+<span class="nc" id="L62">                    new UsernamePasswordAuthenticationToken(req.email(), req.password())</span>
             );
-<span class="fc" id="L64">            String token = jwtUtil.generate(req.email());</span>
-<span class="fc" id="L65">            log.info(&quot;✅ Autenticación exitosa para {}&quot;, req.email());</span>
-<span class="fc" id="L66">            return ResponseEntity.ok(new LoginResponse(token));</span>
-<span class="fc" id="L67">        } catch (BadCredentialsException ex) {</span>
-<span class="fc" id="L68">            log.warn(&quot;❌ Fallo de autenticación para {}: {}&quot;, req.email(), ex.getMessage());</span>
-<span class="fc" id="L69">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
-<span class="fc" id="L70">                    .body(&quot;Usuario o contraseña inválidos&quot;);</span>
+<span class="nc" id="L64">            String token = jwtUtil.generate(req.email());</span>
+<span class="nc" id="L65">            log.info(&quot;✅ Autenticación exitosa para {}&quot;, req.email());</span>
+<span class="nc" id="L66">            return ResponseEntity.ok(new LoginResponse(token));</span>
+<span class="nc" id="L67">        } catch (BadCredentialsException ex) {</span>
+<span class="nc" id="L68">            log.warn(&quot;❌ Fallo de autenticación para {}: {}&quot;, req.email(), ex.getMessage());</span>
+<span class="nc" id="L69">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
+<span class="nc" id="L70">                    .body(&quot;Usuario o contraseña inválidos&quot;);</span>
 <span class="nc" id="L71">        } catch (Exception e) {</span>
 <span class="nc" id="L72">            log.error(&quot;⚠️ Error inesperado en login: {}&quot;, e.getMessage(), e);</span>
 <span class="nc" id="L73">            return ResponseEntity.internalServerError().body(&quot;Error interno al autenticar usuario&quot;);</span>

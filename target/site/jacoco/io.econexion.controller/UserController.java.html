@@ -61,9 +61,9 @@ public class UserController {
     @Operation(summary = &quot;Eliminar usuario&quot;)
     @DeleteMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;?&gt; delete(@PathVariable UUID id) {
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        return service.delete(id)</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        return service.delete(id)</span>
 <span class="fc" id="L65">                ? ResponseEntity.noContent().build()</span>
-<span class="nc" id="L66">                : ResponseEntity.notFound().build();</span>
+<span class="fc" id="L66">                : ResponseEntity.notFound().build();</span>
     }
 
     // ✅ 6️⃣ Publicaciones del usuario

@@ -37,27 +37,29 @@ class OfferServiceTest {
     }
 
     @Test
-    void findById_whenPresent_returnsOffer() {
+    void getOfferById_whenPresent_returnsOffer() {
         UUID id = UUID.randomUUID();
         Offer o = new Offer();
         o.setId(id);
 
         when(offerRepository.findById(id)).thenReturn(Optional.of(o));
 
-        Offer got = offerService.findById(id);
+        Optional<Offer> result = offerService.getOfferById(id);
 
-        assertNotNull(got);
-        assertEquals(id, got.getId());
+        assertTrue(result.isPresent());
+        assertEquals(id, result.get().getId());
         verify(offerRepository).findById(id);
     }
 
     @Test
-    void findById_whenNotPresent_returnsNull() {
+    void getOfferById_whenNotPresent_returnsEmpty() {
         UUID id = UUID.randomUUID();
 
         when(offerRepository.findById(id)).thenReturn(Optional.empty());
 
-        Offer got = offerService.findById(id);
-        assertNull(got);
+        Optional<Offer> result = offerService.getOfferById(id);
+
+        assertTrue(result.isEmpty());
+        verify(offerRepository).findById(id);
     }
 }

@@ -3,46 +3,56 @@
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import io.econexion.model.Post;
-import io.econexion.model.User;
 import io.econexion.repository.PostRepository;
 
 @Service
-<span class="fc" id="L15">public class PostService {</span>
+<span class="fc" id="L13">public class PostService {</span>
+
     @Autowired
-    PostRepository postrepository;
-    @Autowired
-    UserService userservice;
-    
-    public Post savePost(Post post){ 
+    private PostRepository postrepository;
+
+    // ===============================
+    //       GUARDAR POST
+    // ===============================
+    public Post savePost(Post post) { 
 <span class="nc" id="L22">        return postrepository.save(post);</span>
     }
 
-    public Post findById(UUID id) throws NotFoundException {
-<span class="nc" id="L26">        return postrepository.findById(id).orElseThrow(() -&gt; new NotFoundException());    </span>
+    // ===============================
+    //       BUSCAR POR ID
+    // ===============================
+    // ❗ IMPORTANTE: SIN throws NotFoundException
+    public Post findById(UUID id) {
+<span class="nc" id="L30">        return postrepository.findById(id).orElse(null);</span>
     }
-   
-    public ResponseEntity&lt;?&gt; deletePost(UUID id){
-<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        if(!postrepository.findById(id).isPresent()){</span>
-<span class="nc" id="L31">            return ResponseEntity.notFound().build();</span>
+
+    // ===============================
+    //         ELIMINAR POST
+    // ===============================
+    public ResponseEntity&lt;?&gt; deletePost(UUID id) {
+
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (!postrepository.findById(id).isPresent()) {</span>
+<span class="nc" id="L39">            return ResponseEntity.notFound().build();</span>
         }
-<span class="fc" id="L33">        postrepository.deleteById(id);</span>
-<span class="fc" id="L34">        return ResponseEntity.ok(&quot;post eliminado, correctamente&quot;);</span>
-    }
-   
-    public ResponseEntity&lt;?&gt; updatePost(Post post){
 
-<span class="fc bfc" id="L39" title="All 2 branches covered.">         if(!postrepository.findById(post.getId()).isPresent()){</span>
-<span class="fc" id="L40">            return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L42">        postrepository.deleteById(id);</span>
+<span class="fc" id="L43">        return ResponseEntity.ok(&quot;post eliminado correctamente&quot;);</span>
+    }
+
+    // ===============================
+    //        ACTUALIZAR POST
+    // ===============================
+    public ResponseEntity&lt;?&gt; updatePost(Post post) {
+
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (!postrepository.findById(post.getId()).isPresent()) {</span>
+<span class="fc" id="L52">            return ResponseEntity.notFound().build();</span>
         }
-<span class="fc" id="L42">        return ResponseEntity.ok().body(postrepository.save(post));</span>
 
+<span class="fc" id="L55">        return ResponseEntity.ok(postrepository.save(post));</span>
     }
-    
-
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

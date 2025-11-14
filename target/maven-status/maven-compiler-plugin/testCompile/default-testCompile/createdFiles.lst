@@ -17,6 +17,7 @@ io\econexion\security\JwtUtilTest.class
 io\econexion\security\AuthIntegrationFlowTest$2.class
 io\econexion\model\UserValidationTest.class
 io\econexion\dtos\LoginRequestDtoTest.class
+io\econexion\controller\OfferControllerTest.class
 io\econexion\service\PostServiceTest.class
 io\econexion\security\LoginControllerTest.class
 io\econexion\security\LoginControllerTest$1.class
