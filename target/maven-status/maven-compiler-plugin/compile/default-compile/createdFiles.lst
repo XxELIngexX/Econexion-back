@@ -3,15 +3,18 @@ io\econexion\model\Post.class
 io\econexion\exception\GlobalExceptionHandler.class
 io\econexion\security\SecurityConfig$LoginController.class
 io\econexion\service\UserService.class
+io\econexion\dtos\ErrorResponse.class
 io\econexion\model\OfferStatus.class
 io\econexion\chat\dto\SendMessageRequest.class
 io\econexion\service\OfferService.class
 io\econexion\chat\ChatMessage.class
 io\econexion\dtos\CreateOfferDTO.class
+io\econexion\dtos\UpdateUserRequest.class
 io\econexion\model\Offer.class
 io\econexion\security\JwtUtil.class
 io\econexion\repository\OfferRepository.class
 io\econexion\chat\controller\ChatController.class
+io\econexion\dtos\UserProfileResponse.class
 io\econexion\model\Message.class
 io\econexion\chat\dto\MessageDTO.class
 io\econexion\repository\PostRepository.class
@@ -20,6 +23,7 @@ io\econexion\chat\service\ChatService.class
 io\econexion\EconexionLabApplication.class
 io\econexion\chat\dto\CreateConversationRequest.class
 io\econexion\controller\AuthenticationController.class
+io\econexion\chat\dto\ChatMessageDto.class
 io\econexion\dtos\CreatePostDto.class
 io\econexion\controller\AuthenticationController$LoginRequest.class
 io\econexion\controller\PostController.class
