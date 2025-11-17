@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: io.econexion.controller.AuthenticationControllerTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.91 s -- in io.econexion.controller.AuthenticationControllerTest

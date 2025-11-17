@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">econexion-lab</a> &gt; <a href="index.source.html" class="el_package">io.econexion.exception</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package io.econexion.exception;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 🌐 GlobalExceptionHandler — Manejador global de excepciones.
+ * Intercepta y devuelve respuestas JSON limpias y consistentes con códigos HTTP adecuados.
+ */
+@ControllerAdvice
+<span class="fc" id="L25">public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {</span>
+
+    /** 🧩 Maneja errores de validación @Valid (campos vacíos, formatos incorrectos, etc.) */
+    @Override
+    protected ResponseEntity&lt;Object&gt; handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
+
+<span class="fc" id="L35">        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L36">        body.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L37">        body.put(&quot;status&quot;, HttpStatus.BAD_REQUEST.value());</span>
+<span class="fc" id="L38">        body.put(&quot;error&quot;, &quot;Validación fallida&quot;);</span>
+
+<span class="fc" id="L40">        Map&lt;String, String&gt; fieldErrors = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L41">        ex.getBindingResult().getAllErrors().forEach(err -&gt; {</span>
+<span class="fc" id="L42">            String fieldName = ((FieldError) err).getField();</span>
+<span class="fc" id="L43">            String message = err.getDefaultMessage();</span>
+<span class="fc" id="L44">            fieldErrors.put(fieldName, message);</span>
+<span class="fc" id="L45">        });</span>
+
+<span class="fc" id="L47">        body.put(&quot;fields&quot;, fieldErrors);</span>
+<span class="fc" id="L48">        body.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L49">        return new ResponseEntity&lt;&gt;(body, HttpStatus.BAD_REQUEST);</span>
+    }
+
+    /** ⚠️ Maneja errores de integridad de datos (duplicados o constraint violation) */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity&lt;Object&gt; handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
+<span class="fc" id="L55">        Throwable root = getRootCause(ex);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        String message = root.getMessage() != null ? root.getMessage().toLowerCase() : &quot;&quot;;</span>
+
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (root instanceof SQLException ||</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">            message.contains(&quot;unique&quot;) ||</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            message.contains(&quot;duplicate&quot;) ||</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">            message.contains(&quot;constraint&quot;)) {</span>
+
+<span class="fc" id="L63">            Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L64">            body.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L65">            body.put(&quot;status&quot;, HttpStatus.CONFLICT.value());</span>
+<span class="fc" id="L66">            body.put(&quot;error&quot;, &quot;Conflicto de datos&quot;);</span>
+<span class="fc" id="L67">            body.put(&quot;message&quot;, &quot;Violación de integridad: &quot; + root.getMessage());</span>
+<span class="fc" id="L68">            body.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L69">            return new ResponseEntity&lt;&gt;(body, HttpStatus.CONFLICT);</span>
+        }
+
+<span class="nc" id="L72">        return handleGenericException(ex, request);</span>
+    }
+
+    /** ⚠️ Maneja conflictos lógicos (por ejemplo: usuario ya existe) */
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity&lt;Object&gt; handleIllegalState(IllegalStateException ex, WebRequest request) {
+<span class="fc" id="L78">        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L79">        body.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L80">        body.put(&quot;status&quot;, HttpStatus.CONFLICT.value());</span>
+<span class="fc" id="L81">        body.put(&quot;error&quot;, &quot;Conflicto lógico&quot;);</span>
+<span class="fc" id="L82">        body.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L83">        body.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L84">        return new ResponseEntity&lt;&gt;(body, HttpStatus.CONFLICT);</span>
+    }
+
+    /** 💥 Maneja cualquier otro error inesperado del sistema */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;Object&gt; handleGenericException(Exception ex, WebRequest request) {
+<span class="fc" id="L90">        Map&lt;String, Object&gt; body = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L91">        body.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L92">        body.put(&quot;status&quot;, HttpStatus.INTERNAL_SERVER_ERROR.value());</span>
+<span class="fc" id="L93">        body.put(&quot;error&quot;, &quot;Error interno del servidor&quot;);</span>
+<span class="fc" id="L94">        body.put(&quot;message&quot;, ex.getMessage());</span>
+<span class="fc" id="L95">        body.put(&quot;path&quot;, request.getDescription(false).replace(&quot;uri=&quot;, &quot;&quot;));</span>
+<span class="fc" id="L96">        return new ResponseEntity&lt;&gt;(body, HttpStatus.INTERNAL_SERVER_ERROR);</span>
+    }
+
+    /** 🔍 Obtiene la causa raíz de una excepción anidada. */
+    private Throwable getRootCause(Throwable ex) {
+<span class="fc" id="L101">        Throwable cause = ex.getCause();</span>
+<span class="pc bpc" id="L102" title="1 of 4 branches missed.">        if (cause == null || cause == ex) return ex;</span>
+<span class="fc" id="L103">        return getRootCause(cause);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">econexion-lab</a> &gt; <a href="index.source.html" class="el_package">io.econexion.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package io.econexion.controller;
+
+import io.econexion.model.User;
+import io.econexion.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping(&quot;/api/users&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+@Tag(name = &quot;Usuarios&quot;, description = &quot;Gestión completa de usuarios&quot;)
+public class UserController {
+
+    private final UserService service;
+
+<span class="fc" id="L23">    public UserController(UserService service) {</span>
+<span class="fc" id="L24">        this.service = service;</span>
+<span class="fc" id="L25">    }</span>
+
+    // ✅ 1️⃣ Listar todos los usuarios
+    @Operation(summary = &quot;Listar todos los usuarios&quot;)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity&lt;?&gt; list() {
+<span class="fc" id="L31">        List&lt;User&gt; salida = service.findAll();</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">        return salida.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(salida);</span>
+    }
+
+    // ✅ 2️⃣ Obtener usuario por ID
+    @Operation(summary = &quot;Obtener usuario por ID&quot;)
+    @GetMapping(value = &quot;/{id}&quot;, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity&lt;?&gt; get(@PathVariable UUID id) {
+<span class="fc" id="L39">        return service.findById(id)</span>
+<span class="fc" id="L40">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L41">                .orElse(ResponseEntity.notFound().build());</span>
+    }
+
+    // ✅ 3️⃣ Crear usuario
+    @Operation(summary = &quot;Crear nuevo usuario&quot;)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity&lt;User&gt; create(@Valid @RequestBody User user) {
+<span class="fc" id="L48">        return ResponseEntity.ok(service.create(user));</span>
+    }
+
+    // ✅ 4️⃣ Actualizar usuario
+    @Operation(summary = &quot;Actualizar usuario&quot;)
+    @PutMapping(value = &quot;/{id}&quot;, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity&lt;?&gt; update(@PathVariable UUID id, @Valid @RequestBody User user) {
+<span class="fc" id="L55">        return service.update(id, user)</span>
+<span class="fc" id="L56">                .map(ResponseEntity::ok)</span>
+<span class="fc" id="L57">                .orElse(ResponseEntity.notFound().build());</span>
+    }
+
+    // ✅ 5️⃣ Eliminar usuario
+    @Operation(summary = &quot;Eliminar usuario&quot;)
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;?&gt; delete(@PathVariable UUID id) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        return service.delete(id)</span>
+<span class="fc" id="L65">                ? ResponseEntity.noContent().build()</span>
+<span class="fc" id="L66">                : ResponseEntity.notFound().build();</span>
+    }
+
+    // ✅ 6️⃣ Publicaciones del usuario
+    @Operation(summary = &quot;Listar publicaciones del usuario&quot;)
+    @GetMapping(value = &quot;/{id}/posts&quot;, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity&lt;?&gt; getUserPosts(@PathVariable UUID id) {
+<span class="nc" id="L73">        return service.findById(id)</span>
+<span class="nc" id="L74">                .map(user -&gt; ResponseEntity.ok(user.getPublications()))</span>
+<span class="nc" id="L75">                .orElse(ResponseEntity.notFound().build());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
