@@ -35,53 +35,139 @@ Spring Boot REST API for lab practice. It now includes:
 
 ---
 
-## 🚀 4) Run the Project / Ejecutar el Proyecto
+## 🚀 How to run Econexion-back locally
 
-### 🐘 4.1 PostgreSQL (recommended for normal use)
+This project uses **Spring Boot**, **PostgreSQL via Docker**, and **Maven**.
 
-#### A) Docker
-```bash
-docker run -d   --name postgres-econexion   -e POSTGRES_USER=postgres   -e POSTGRES_PASSWORD=12345   -e POSTGRES_DB=econexion   -p 5432:5432   postgres:15
+### 1️⃣ Requirements
+
+- Java 21+
+- Maven 3.9+
+- Docker Desktop
+- Git
+
+Verify installation:
+
+```
+java -version
+mvn -version
+docker -v
 ```
 
-#### B) Local install
-```sql
-CREATE DATABASE econexion;
+---
+
+### 2️⃣ Start PostgreSQL in Docker
+
+Stop and remove any previous container:
+
+```
+docker stop postgres-econexion || true
+docker rm postgres-econexion || true
 ```
 
-### ⚙️ 4.2 Build & Run
+Start PostgreSQL on port **5433**:
 
-#### Option A — Docker image
-```bash
-# Build
-docker build -t econexion-lab .
-
-# Run
-docker run -d -p 35000:35000 --name econexion econexion-lab
 ```
-App URL: **http://localhost:35000**
-
-#### Option B — JAR directly (Postgres profile)
-```bash
-mvn -q -DskipTests clean package
-
-java -jar target/econexion-1.0-SNAPSHOT.jar   --server.port=35000   --spring.profiles.active=default
+docker run -d --name postgres-econexion   -e POSTGRES_USER=postgres   -e POSTGRES_PASSWORD=12345   -e POSTGRES_DB=econexion   -p 5433:5432   postgres:15
 ```
 
-#### Option C — Dev with H2 (profile `chat-h2`) 
-> Útil para probar *rápido* el chat sin instalar Postgres.
-```bash
-mvn -q -DskipTests clean package
+Check if running:
 
-java -jar target/econexion-1.0-SNAPSHOT.jar   --server.port=35001   --spring.profiles.active=chat-h2   --spring.h2.console.enabled=true   --spring.h2.console.path=/h2
 ```
-- Health: `http://localhost:35001/actuator/health` → `{"status":"UP"}`
-- H2 Console: `http://localhost:35001/h2`  
-  JDBC URL: `jdbc:h2:mem:econexion`  |  User: `sa`  |  Password: *(vacío)*
+docker ps
+```
 
-> Tip (Maven run con perfil):  
-> `mvn spring-boot:run -Dspring-boot.run.profiles=chat-h2 -DskipTests`  
-> *(En Windows, si ves “Unknown lifecycle phase …run.profiles”, ejecuta el goal primero como arriba.)*
+---
+
+### 3️⃣ application.yml configuration
+
+```
+server:
+  port: 35000
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/econexion
+    username: postgres
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+jwt:
+  secret: unSuperSecretoDePrueba1234567890
+  expiration-minutes: 120
+```
+
+---
+
+### 4️⃣ Run the backend
+
+From the project root:
+
+```
+mvn spring-boot:run
+```
+
+API available at:
+
+```
+http://localhost:35000
+```
+
+Health check:
+
+```
+curl http://localhost:35000/actuator/health
+```
+
+---
+
+### 5️⃣ Run unit tests
+
+```
+mvn test
+```
+
+Generate Jacoco report:
+
+```
+mvn jacoco:report
+```
+
+Report output:
+
+```
+target/site/jacoco/index.html
+```
+
+---
+
+### 6️⃣ Connect manually to PostgreSQL
+
+```
+docker exec -it postgres-econexion psql -U postgres
+```
+
+Change password if needed:
+
+```
+ALTER USER postgres WITH PASSWORD '12345';
+```
 
 ---
 
