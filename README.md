@@ -135,6 +135,11 @@ Health check:
 curl http://localhost:35000/actuator/health
 ```
 
+<img width="1919" height="1007" alt="imagen" src="https://github.com/user-attachments/assets/19321cc4-f87b-49bb-88dc-b242bd8a0d73" />
+<img width="889" height="351" alt="imagen" src="https://github.com/user-attachments/assets/5348bbf2-a405-4991-9356-54a30b04fa6e" />
+<img width="768" height="362" alt="imagen" src="https://github.com/user-attachments/assets/7d252d46-df64-4efe-a246-60ca84ada034" />
+<img width="724" height="149" alt="imagen" src="https://github.com/user-attachments/assets/5f059e07-6677-45d1-bcdf-95b48dd61c4f" />
+
 ---
 
 ### 5️⃣ Run unit tests
