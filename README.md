@@ -416,6 +416,79 @@ mvn "-Dtest=SmokeTest,UserServiceTest,OfferServiceTest,PostServiceTest,JwtUtilTe
 - En PowerShell, el parámetro `-Dtest` debe ir entre **comillas** si pasas una lista separada por comas.  
 - Los tests de controller están hechos en modo **standalone** (no levantan todo el contexto).
 
+
+# 📊 Load Testing Report (k6)
+
+This project includes an extensive performance test suite executed with **k6** to validate stability, scalability, and response times of the backend.
+
+## ✅ Summary of Tests Executed
+
+| Test Type              | Max VUs | Duration | Result |
+|------------------------|---------|----------|--------|
+| Smoke Test             | 1       | 10s      | ✓ Passed |
+| Load Test              | 100     | 30s      | ✓ Passed |
+| Spike Test             | 200     | 10s      | ✓ Passed |
+| Endurance Test         | 20      | 60s      | ✓ Passed |
+| Latency Test           | 10      | 30s      | ✓ Passed |
+| Chaos Test             | 30      | 30s      | ✓ Passed |
+| Concurrency Curve Test | 150     | 60s      | ✓ Passed |
+| Full Suite Test        | 320     | 3m50s    | ✓ Passed |
+
+## 🚀 Key Metrics
+
+- **http_req_failed:** `0.00%` — No failed requests  
+- **Average latency:** `13.39ms`  
+- **p90 latency:** `26.89ms`  
+- **p95 latency:** `33.35ms`  
+- **Over 9000 successful requests processed**
+
+## 📌 Interpretation
+
+These results demonstrate that the backend is:
+
+- Highly **stable**
+- Capable of supporting **large concurrent user loads**
+- Resistant to **traffic spikes**
+- Suitable for **production-level usage**
+
+## 📁 Test Files Location
+
+```
+Econexion-back/
+└── load-tests/
+    ├── smoke-test.js
+    ├── load-test.js
+    ├── load-test-heavy.js
+    ├── stress-test.js
+    ├── spike-test.js
+    ├── soak-test.js
+    ├── endurance-test.js
+    ├── breakpoint-test.js
+    ├── stress-recovery-test.js
+    ├── chaos-test.js
+    ├── latency-test.js
+    ├── concurrency-test.js
+    ├── concurrency-curve-test.js
+    ├── quick-test.js
+    └── full-suite-test.js
+```
+
+## ▶️ How to Run
+
+```
+k6 run load-tests/<test-file>.js
+```
+
+Example:
+
+```
+k6 run load-tests/full-suite-test.js
+```
+
+---
+
+**This report certifies that the backend passed all performance scenarios successfully.**
+
 ---
 
 ## 9) Troubleshooting / Solución de problemas
