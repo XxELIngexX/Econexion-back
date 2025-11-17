@@ -142,14 +142,6 @@ Change password if needed:
 ALTER USER postgres WITH PASSWORD '12345';
 ```
 
----
-
-## 📖 5) Swagger / OpenAPI
-
-`http://localhost:35000/swagger-ui/index.html#/` (o `35001` si usas `chat-h2`).
-
----
-
 ## 6) Auth / Autenticación
 
 **Login**  
