@@ -1,38 +1,6 @@
 # Econexion Lab – REST API (Users + Weather + JWT + Chat)
 **(EN / ES)**
 
-Spring Boot REST API for lab practice. It now includes:
-- In-memory CRUD for *users* (profile `lab`).
-- Weather endpoint (`/v1/weather/{city}`) with JWT protection for POST.
-- Basic login (`/api/auth/login`) issuing JWT tokens.
-- **NEW: User-to-User Chat (REST)** — create conversations by offer and exchange messages.
-
----
-
-## 1) Overview / Resumen
-
-**EN**: This lab project demonstrates Spring Boot REST with profiles, in-memory persistence, authentication using JWT, and a simple user-to-user chat stored in a relational DB (PostgreSQL or H2 for dev).  
-**ES**: Este proyecto de laboratorio demuestra REST con Spring Boot, perfiles, autenticación con JWT y un chat entre usuarios almacenado en BD relacional (PostgreSQL o H2 para desarrollo).
-
----
-
-## 2) Requirements / Requisitos
-- Java **21**
-- Maven **3.9+**
-- Internet for dependencies / Internet para dependencias
-- PostgreSQL **15+** (prod/dev normal) or H2 (dev profile `chat-h2`) / PostgreSQL **15+** (prod/dev normal) o H2 (perfil dev `chat-h2`)
-
----
-
-## 3) Profiles / Perfiles
-
-- `lab`: ejemplo de CRUD en memoria para *users* y login simple con JWT.
-- `default` (prod/dev con Postgres): usa PostgreSQL real para persistencia.
-- `chat-h2` (dev): levanta **H2 en memoria** y habilita el chat para pruebas rápidas (incluye consola H2 opcional).
-
-> Opcional (solo dev): si tu seguridad lo requiere, puedes permitir el chat sin JWT con  
-> `econexion.security.permit-chat=true` (añade bajo el perfil que estés usando).
-
 ---
 
 ## 🚀 How to run Econexion-back locally
