@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/econexion
+    url: jdbc:postgresql://172.200.171.97:5432/econexia_db
     username: postgres
-    password: 12345
+    password: giovann1
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -27,3 +27,8 @@ management:
 jwt:
   secret: unSuperSecretoDePrueba1234567890
   expiration-minutes: 120
+
+google:
+  android-client-id: 32986221627-59jc0c9vja9cl7i4150r3ufud38d09pb.apps.googleusercontent.com
+  client-id: 32986221627-1qg0bor77ng5mf5e1kp584t4k5epbe03.apps.googleusercontent.com
+

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,7 +67,12 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
+    @GetMapping("/get/{email}")
+    public ResponseEntity<?> getByEmail(@PathVariable String email) throws Exception {
+        return service.findByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
     @Operation(summary = "Crear un nuevo usuario",
             description = "Agrega un usuario en memoria y devuelve la información creada",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -120,4 +124,12 @@ public class UserController {
         User user = service.findById(id).orElseThrow(() -> new Exception("Usuario no encontrado"));
         return ResponseEntity.ok().body(user.getPublications());
     }
+    @GetMapping("/exists/{email}")
+        public ResponseEntity<?> existsByEmail(@PathVariable String email) {
+                User exists = service.findByEmail(email).orElse(null);
+                if (exists == null) {
+                    return ResponseEntity.ok().body(false);
+                }
+                return ResponseEntity.ok().body(exists);
+        }
 }

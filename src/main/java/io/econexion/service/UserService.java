@@ -7,7 +7,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;      // <-- import necesario
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile; // <-- import necesario
 
 @Service
  

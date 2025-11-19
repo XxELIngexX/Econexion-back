@@ -1,12 +1,9 @@
 package io.econexion.controller;
 
-import java.math.BigDecimal;
-import java.util.Optional;
+
 import java.util.UUID;
 
-import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.econexion.dtos.CreatePostDto;
 import io.econexion.model.Post;
@@ -40,16 +36,13 @@ public class PostController {
     private PostService postservice;
     private UserService userservice;
     private JwtUtil jwtUtil;
-    private ObjectMapper mapper;
 
 
 
     @Autowired
-    public PostController(PostService postservice, UserService userservice, JwtUtil jwtUtil, ObjectMapper mapper) {
+    public PostController(PostService postservice, UserService userservice, JwtUtil jwtUtilt) {
         this.postservice = postservice;
         this.userservice = userservice;
-        this.jwtUtil = jwtUtil;
-        this.mapper = mapper;
     }
 
     @Operation(summary = "Crear un nuevo post",

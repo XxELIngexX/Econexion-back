@@ -29,23 +29,22 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
-
     // @Enumerated(EnumType.STRING)
     @Column(name = "rol", nullable = false)
     private String rol;
 
-@ManyToMany(mappedBy = "participants")
-private List<Conversation> conversations;
+    @Column(name = "password", nullable = true)
+    private String password;
 
+    @ManyToMany(mappedBy = "participants")
+    private List<Conversation> conversations;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference("user-posts")
     private List<Post> publications;
 
     @OneToMany(mappedBy = "offerer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-@JsonManagedReference("user-offers")
+    @JsonManagedReference("user-offers")
 
     private List<Offer> offers;
 
@@ -54,11 +53,14 @@ private List<Conversation> conversations;
         this.username = username;
         this.nit = nit;
         this.email = email;
-        this.password = password;
         this.rol = rol;
+        this.password = password;
     }
 
     public User() {
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 }
