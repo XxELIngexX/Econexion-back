@@ -5,15 +5,21 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.time.Instant;
 import java.util.Date;
 
+@Component
 public class JwtUtil {
 
     private final SecretKey key;
     private final long expirationMs;
 
-    public JwtUtil(String secret, long expirationMinutes) {
+    public JwtUtil(@Value("${jwt.secret}") String secret,
+                   @Value("${jwt.expiration-minutes}") long expirationMinutes) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.expirationMs = expirationMinutes * 60_000L;
     }

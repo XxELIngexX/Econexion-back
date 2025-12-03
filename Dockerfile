@@ -2,6 +2,8 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
+RUN mkdir -p /app/logs
+
 ENV PORT=35000
 EXPOSE 35000
 

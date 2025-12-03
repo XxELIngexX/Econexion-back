@@ -8,6 +8,13 @@ spring:
     password: giovann1
     driver-class-name: org.postgresql.Driver
 
+  hikari:
+    maximum-pool-size: 10
+    minimum-idle: 2
+    idle-timeout: 600000 # 10 min
+    max-lifetime: 1800000 # 30 min
+    connection-timeout: 30000 # 30s
+
   jpa:
     hibernate:
       ddl-auto: update # o validate / create-drop según lo que quieras
@@ -32,3 +39,12 @@ google:
   android-client-id: 32986221627-59jc0c9vja9cl7i4150r3ufud38d09pb.apps.googleusercontent.com
   client-id: 32986221627-1qg0bor77ng5mf5e1kp584t4k5epbe03.apps.googleusercontent.com
 
+# ========= LOGGING =========
+logging:
+  level:
+    root: INFO
+    io.econexion: DEBUG
+  file:
+    name: /app/logs/app.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
