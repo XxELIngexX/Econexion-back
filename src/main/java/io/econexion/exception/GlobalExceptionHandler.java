@@ -18,13 +18,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 🌐 GlobalExceptionHandler — Manejador global de excepciones.
- * Intercepta y devuelve respuestas JSON limpias y consistentes con códigos HTTP adecuados.
+ * Global exception handler for providing consistent and structured JSON responses
+ * when exceptions occur across the entire application.
+ * <p>
+ * Extends {@link ResponseEntityExceptionHandler} to override validation handling,
+ * and provides custom handlers for common backend errors such as constraint violations,
+ * logical conflicts, and unexpected system failures.
+ * </p>
  */
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    /** 🧩 Maneja errores de validación @Valid (campos vacíos, formatos incorrectos, etc.) */
+    /**
+     * Handles validation errors triggered by @Valid annotations.
+     * <p>
+     * Extracts field-level validation messages and returns a structured
+     * response with HTTP 400 (Bad Request).
+     * </p>
+     *
+     * @param ex      the thrown validation exception
+     * @param headers default HTTP headers
+     * @param status  default HTTP status
+     * @param request the web request context
+     * @return structured JSON response with validation errors
+     */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -35,7 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Validación fallida");
+        body.put("error", "Validation failed");
 
         Map<String, String> fieldErrors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(err -> {
@@ -49,54 +66,90 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    /** ⚠️ Maneja errores de integridad de datos (duplicados o constraint violation) */
+    /**
+     * Handles data integrity violations such as duplicate keys or constraint violations.
+     * <p>
+     * Returns HTTP 409 (Conflict) when database-level constraints are triggered.
+     * </p>
+     *
+     * @param ex      the thrown DataIntegrityViolationException
+     * @param request the web request context
+     * @return JSON response describing the conflict
+     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
         Throwable root = getRootCause(ex);
         String message = root.getMessage() != null ? root.getMessage().toLowerCase() : "";
 
         if (root instanceof SQLException ||
-            message.contains("unique") ||
-            message.contains("duplicate") ||
-            message.contains("constraint")) {
+                message.contains("unique") ||
+                message.contains("duplicate") ||
+                message.contains("constraint")) {
 
             Map<String, Object> body = new HashMap<>();
             body.put("timestamp", LocalDateTime.now());
             body.put("status", HttpStatus.CONFLICT.value());
-            body.put("error", "Conflicto de datos");
-            body.put("message", "Violación de integridad: " + root.getMessage());
+            body.put("error", "Data conflict");
+            body.put("message", "Integrity violation: " + root.getMessage());
             body.put("path", request.getDescription(false).replace("uri=", ""));
+
             return new ResponseEntity<>(body, HttpStatus.CONFLICT);
         }
 
         return handleGenericException(ex, request);
     }
 
-    /** ⚠️ Maneja conflictos lógicos (por ejemplo: usuario ya existe) */
+    /**
+     * Handles logical conflicts raised via IllegalStateException.
+     * <p>
+     * This is typically used for domain-specific business rules (e.g., user already exists).
+     * Returns HTTP 409 (Conflict).
+     * </p>
+     *
+     * @param ex      the thrown IllegalStateException
+     * @param request the web request context
+     * @return JSON response describing the conflict
+     */
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Object> handleIllegalState(IllegalStateException ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.CONFLICT.value());
-        body.put("error", "Conflicto lógico");
+        body.put("error", "Logical conflict");
         body.put("message", ex.getMessage());
         body.put("path", request.getDescription(false).replace("uri=", ""));
+
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 
-    /** 💥 Maneja cualquier otro error inesperado del sistema */
+    /**
+     * Generic fallback exception handler for unexpected runtime errors.
+     * <p>
+     * Returns HTTP 500 (Internal Server Error) with message and path info.
+     * </p>
+     *
+     * @param ex      the thrown exception
+     * @param request the web request context
+     * @return JSON response for unhandled exceptions
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        body.put("error", "Error interno del servidor");
+        body.put("error", "Internal server error");
         body.put("message", ex.getMessage());
         body.put("path", request.getDescription(false).replace("uri=", ""));
+
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /** 🔍 Obtiene la causa raíz de una excepción anidada. */
+    /**
+     * Retrieves the root cause of a nested exception recursively.
+     *
+     * @param ex the thrown exception
+     * @return the deepest underlying cause
+     */
     private Throwable getRootCause(Throwable ex) {
         Throwable cause = ex.getCause();
         if (cause == null || cause == ex) return ex;

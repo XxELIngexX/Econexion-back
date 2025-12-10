@@ -1,25 +1,70 @@
 package io.econexion.dtos;
 
 /**
- * 📩 DTO para solicitudes de inicio de sesión.
- * Contiene las credenciales mínimas necesarias (email y password).
+ * DTO representing a login request.
+ * <p>
+ * This object carries the minimum required credentials:
+ * an email and a password. It is used by authentication endpoints
+ * to receive login attempts from clients.
+ * </p>
  */
 public class LoginRequestDto {
+
+    /**
+     * Email address used to authenticate the user.
+     */
     private String email;
+
+    /**
+     * Plain-text password provided by the user during login.
+     */
     private String password;
 
+    /**
+     * Default constructor required for serialization/deserialization.
+     */
     public LoginRequestDto() {}
 
+    /**
+     * Constructs a new {@link LoginRequestDto} with the given credentials.
+     *
+     * @param email    the user email
+     * @param password the user password
+     */
     public LoginRequestDto(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public String getEmail() { return email; }
+    /**
+     * @return the email used for login
+     */
+    public String getEmail() {
+        return email;
+    }
 
-    public void setEmail(String email) { this.email = email; }
+    /**
+     * Sets the email used for login.
+     *
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getPassword() { return password; }
+    /**
+     * @return the password used for login
+     */
+    public String getPassword() {
+        return password;
+    }
 
-    public void setPassword(String password) { this.password = password; }
+    /**
+     * Sets the password used for login.
+     *
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

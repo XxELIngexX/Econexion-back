@@ -19,6 +19,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+/**
+ * Controller responsible for handling authentication-related operations,
+ * including user login and registration.
+ * <p>
+ * Uses JWT for stateless authentication and integrates with Spring Security
+ * to validate credentials. Also provides OpenAPI annotations for documentation.
+ * </p>
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
@@ -30,6 +38,14 @@ public class AuthenticationController {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Constructs a new {@link AuthenticationController}.
+     *
+     * @param authenticationManager the authentication manager for validating credentials
+     * @param jwtUtil               utility for generating JWT tokens
+     * @param userService           service for user-related operations
+     * @param passwordEncoder       encoder used to hash passwords before saving them
+     */
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     JwtUtil jwtUtil,
                                     UserService userService,
@@ -41,46 +57,95 @@ public class AuthenticationController {
     }
 
     // ==== DTOs ====
+
+    /**
+     * DTO representing login request parameters.
+     *
+     * @param email    user email (required)
+     * @param password user password (required)
+     */
     public record LoginRequest(@NotBlank String email, @NotBlank String password) { }
+
+    /**
+     * DTO representing a successful login response containing a JWT.
+     *
+     * @param token generated JWT token
+     */
     public record LoginResponse(String token) { }
-    public record RegisterRequest(@NotBlank String username,
-                                  @NotBlank String password,
-                                  @NotBlank String email,
-                                  @NotBlank String enterpriseName,
-                                  @NotBlank String nit,
-                                  @NotBlank String rol) { }
+
+    /**
+     * DTO representing a registration request.
+     *
+     * @param username       user's chosen username
+     * @param password       user password (raw, to be encoded)
+     * @param email          user email
+     * @param enterpriseName name of the enterprise associated with the user
+     * @param nit            enterprise identification number
+     * @param rol            role assigned to the user
+     */
+    public record RegisterRequest(
+            @NotBlank String username,
+            @NotBlank String password,
+            @NotBlank String email,
+            @NotBlank String enterpriseName,
+            @NotBlank String nit,
+            @NotBlank String rol
+    ) { }
 
     // ==== LOGIN ====
+
+    /**
+     * Authenticates a user using email and password, returning a JWT if successful.
+     *
+     * @param req login request containing email and password
+     * @return HTTP 200 with token if successful, 401 for invalid credentials, 500 for errors
+     */
     @Operation(summary = "Autenticar usuario", description = "Recibe email y contraseña y devuelve un JWT")
-    @PostMapping(value = "/login",
+    @PostMapping(
+            value = "/login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req) {
         log.info("🔐 Intentando autenticar usuario: {}", req.email());
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(req.email(), req.password())
             );
+
             String token = jwtUtil.generate(req.email());
             log.info("✅ Autenticación exitosa para {}", req.email());
             return ResponseEntity.ok(new LoginResponse(token));
+
         } catch (BadCredentialsException ex) {
             log.warn("❌ Fallo de autenticación para {}: {}", req.email(), ex.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Usuario o contraseña inválidos");
+
         } catch (Exception e) {
             log.error("⚠️ Error inesperado en login: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().body("Error interno al autenticar usuario");
+            return ResponseEntity.internalServerError()
+                    .body("Error interno al autenticar usuario");
         }
     }
 
     // ==== REGISTER ====
+
+    /**
+     * Registers a new user in the system, encoding the password and validating email uniqueness.
+     *
+     * @param user user entity to create
+     * @return HTTP 200 with the created user, 400 if email exists, 500 for unexpected errors
+     */
     @Operation(summary = "Registrar nuevo usuario", description = "Crea un nuevo usuario y devuelve su información")
-    @PostMapping(value = "/register",
+    @PostMapping(
+            value = "/register",
             consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<?> register(@Valid @RequestBody User user) {
         log.info("🧾 Solicitud de registro recibida para {}", user.getEmail());
+
         try {
             Optional<User> existing = userService.findByEmail(user.getEmail());
             if (existing.isPresent()) {
@@ -90,6 +155,7 @@ public class AuthenticationController {
 
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             User newUser = userService.create(user);
+
             log.info("✅ Usuario registrado exitosamente: {}", newUser.getEmail());
             return ResponseEntity.ok(newUser);
 
