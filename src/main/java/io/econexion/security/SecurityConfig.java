@@ -43,6 +43,8 @@ public class SecurityConfig {
         return email -> repo.findByEmail(email)
                 .map(user -> org.springframework.security.core.userdetails.User
                         .withUsername(user.getEmail())
+                        .password(user.getPassword())
+                        .authorities("ROLE_" + user.getRol())
                         .build())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
@@ -113,11 +115,11 @@ public class SecurityConfig {
                 throws IOException, ServletException {
 
             String path = request.getRequestURI();
-            log.info("🔍 Request: {} {}", request.getMethod(), path);
+            // log.info("🔍 Request: {} {}", request.getMethod(), path);
 
             // No aplicar filtro a rutas públicas de autenticación
             if (path.startsWith("/api/auth/")) {
-                log.info("🔓 Ruta pública permitida: {}", path);
+                // log.info("🔓 Ruta pública permitida: {}", path);
                 chain.doFilter(request, response);
                 return;
             }
@@ -141,7 +143,7 @@ public class SecurityConfig {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 } catch (Exception e) {
-                    log.warn("❌ JWT inválido: {}", e.getMessage());
+                    // log.warn("❌ JWT inválido: {}", e.getMessage());
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
                     return;
                 }
