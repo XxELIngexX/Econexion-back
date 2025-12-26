@@ -1,0 +1,66 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea
+.vscode
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+
+# Build outputs
+target/
+!target/econexion-1.0-SNAPSHOT.jar
+build/
+out/
+bin/
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+README.md
+docs/
+*.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+Jenkinsfile
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Test
+src/test/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Node modules (si aplica)
+node_modules/

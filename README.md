@@ -1,139 +1,87 @@
-# Econexion Lab – REST API (Users + Weather + JWT + Chat)
-**(EN / ES)**
+# Econexion - Marketplace para materiales reciclables
 
-Spring Boot REST API for lab practice. It now includes:
-- In-memory CRUD for *users* (profile `lab`).
-- Weather endpoint (`/v1/weather/{city}`) with JWT protection for POST.
-- Basic login (`/api/auth/login`) issuing JWT tokens.
-- **NEW: User-to-User Chat (REST)** — create conversations by offer and exchange messages.
+Una API REST moderna construida con Spring Boot que proporciona autenticación JWT, gestión de usuarios y un sistema de chat en tiempo real para conexiones de e-commerce.
 
----
+Econexion API es una solución backend diseñada para facilitar la comunicación entre usuarios en plataformas de e-commerce. Ofrece un sistema que incluye: 
+- autenticación segura con tokens JWT que permiten acceso controleado a los recursos. 
+- La gestión de usuarios ofrece operaciones CRUD completas con diferentes rolees como vendedor y comprador. 
+- Para facilitar la comunicación, se implementó un sistema de chat que organiza las conversaciones por ofertas comerciales, manteniendo un historial estructurado.
 
-## 1) Overview / Resumen
+La aplicación está construida con Spring Boot 3.2+ y Java 21, siguiendo las mejores prácticas de desarrolelo de APIs RESTful. Soporta múltiples configuraciones para adaptarse a diferentes entornos, desde desarrolelo rápido hasta producción.
 
-**EN**: This lab project demonstrates Spring Boot REST with profiles, in-memory persistence, authentication using JWT, and a simple user-to-user chat stored in a relational DB (PostgreSQL or H2 for dev).  
-**ES**: Este proyecto de laboratorio demuestra REST con Spring Boot, perfiles, autenticación con JWT y un chat entre usuarios almacenado en BD relacional (PostgreSQL o H2 para desarrollo).
+También se incluye documentación interactiva mediante Swagger/OpenAPI y soporte completo para Docker.
 
----
+## Requisitos técnicos
+Para ejecutar esta aplicación necesitarás Java 21 o superior y Maven 3.9+. En configuración de producción se requiere PostgreSQL 15+. Opcionalmente, Docker y Docker Compose facilitan el despliegue en contenedores.
 
-## 2) Requirements / Requisitos
-- Java **21**
-- Maven **3.9+**
-- Internet for dependencies / Internet para dependencias
-- PostgreSQL **15+** (prod/dev normal) or H2 (dev profile `chat-h2`) / PostgreSQL **15+** (prod/dev normal) o H2 (perfil dev `chat-h2`)
+## Configuración y despliegue
+### Configuración con Docker (recomendado)
+Clona el repositorio y ejecuta:
 
----
-
-## 3) Profiles / Perfiles
-
-- `lab`: ejemplo de CRUD en memoria para *users* y login simple con JWT.
-- `default` (prod/dev con Postgres): usa PostgreSQL real para persistencia.
-- `chat-h2` (dev): levanta **H2 en memoria** y habilita el chat para pruebas rápidas (incluye consola H2 opcional).
-
-> Opcional (solo dev): si tu seguridad lo requiere, puedes permitir el chat sin JWT con  
-> `econexion.security.permit-chat=true` (añade bajo el perfil que estés usando).
-
----
-
-## 🚀 4) Run the Project / Ejecutar el Proyecto
-
-### 🐘 4.1 PostgreSQL (recommended for normal use)
-
-#### A) Docker
 ```bash
-docker run -d   --name postgres-econexion   -e POSTGRES_USER=postgres   -e POSTGRES_PASSWORD=12345   -e POSTGRES_DB=econexion   -p 5432:5432   postgres:15
+git clone https://github.com/Eco-nexion/Econexion-back.git
+cd Econexion-back
+docker-compose up --build
+```
+La aplicación estará disponible en http://localhost:35001, con la interfaz Swagger en http://localhost:35001/swagger-ui/index.html.
+
+### Configuración tradicional
+Si prefieres una instalación tradicional, primero configura PostgreSQL. Puedes usar Docker para esto:
+
+#### Para Windows PowerShell
+```powershell
+docker run -d --name postgres-econexion `
+  -e POSTGRES_USER=postgres `
+  -e POSTGRES_PASSWORD=12345 `
+  -e POSTGRES_DB=econexion `
+  -p 5432:5432 `
+  postgres:15
 ```
 
-#### B) Local install
-```sql
-CREATE DATABASE econexion;
+O en una sola línea (más seguro):
+
+```powershell
+docker run -d --name postgres-econexion -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=12345 -e POSTGRES_DB=econexion -p 5432:5432 postgres:15
 ```
 
-### ⚙️ 4.2 Build & Run
-
-#### Option A — Docker image
+#### Para Bash (Linux/macOS/Git Bash)
 ```bash
-# Build
-docker build -t econexion-lab .
-
-# Run
-docker run -d -p 35000:35000 --name econexion econexion-lab
+docker run -d --name postgres-econexion \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=12345 \
+  -e POSTGRES_DB=econexion \
+  -p 5432:5432 \
+  postgres:15
 ```
-App URL: **http://localhost:35000**
 
-#### Option B — JAR directly (Postgres profile)
+#### O en una sola línea:
+
 ```bash
-mvn -q -DskipTests clean package
-
-java -jar target/econexion-1.0-SNAPSHOT.jar   --server.port=35000   --spring.profiles.active=default
+docker run -d --name postgres-econexion -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=12345 -e POSTGRES_DB=econexion -p 5432:5432 postgres:15
 ```
 
-#### Option C — Dev with H2 (profile `chat-h2`) 
-> Útil para probar *rápido* el chat sin instalar Postgres.
+Luego compila y ejecuta la aplicación:
+
 ```bash
-mvn -q -DskipTests clean package
+mvn clean package -DskipTests
 
-java -jar target/econexion-1.0-SNAPSHOT.jar   --server.port=35001   --spring.profiles.active=chat-h2   --spring.h2.console.enabled=true   --spring.h2.console.path=/h2
+java -jar target/econexion-1.0-SNAPSHOT.jar --server.port=35001 --spring.profiles.active=default
 ```
-- Health: `http://localhost:35001/actuator/health` → `{"status":"UP"}`
-- H2 Console: `http://localhost:35001/h2`  
-  JDBC URL: `jdbc:h2:mem:econexion`  |  User: `sa`  |  Password: *(vacío)*
-
-> Tip (Maven run con perfil):  
-> `mvn spring-boot:run -Dspring-boot.run.profiles=chat-h2 -DskipTests`  
-> *(En Windows, si ves “Unknown lifecycle phase …run.profiles”, ejecuta el goal primero como arriba.)*
-
 ---
 
-## 📖 5) Swagger / OpenAPI
+#### ¿Qué hacer si no funciona?
+Si encuentras errores:
 
-`http://localhost:35000/swagger-ui/index.html#/` (o `35001` si usas `chat-h2`).
+- Verifica que Docker Desktop esté corriendo (icono en bandeja)
 
----
+- Ejecuta PowerShell como administrador
 
-## 6) Auth / Autenticación
+- O usa Git Bash que tiene entorno más similar a Linux
 
-**Login**  
-`POST /api/auth/login`  
-Body:
-```json
-{ "username": "ada", "password": "school" }
-```
-Response:
-```json
-{ "token": "<JWT_TOKEN>" }
-```
 
-**Register**  
-`POST /api/auth/register`  
-Body:
-```json
-{
-  "enterpriseName": "karenCorp",
-  "username": "karen Amaya",
-  "nit": "1000474431",
-  "email": "karen@demo.test",
-  "password": "giovann1",
-  "rol": "seller"
-}
-```
-Response (example):
-```json
-{
-  "id": "UUID",
-  "enterpriseName": "karenCorp",
-  "username": "karen Amaya",
-  "nit": "1000474431",
-  "email": "karen@demo.test",
-  "password": "<hash>",
-  "rol": "seller"
-}
-```
+## Autenticación
 
-Use the token in requests / Usar el token en peticiones:
-```
-Authorization: Bearer <JWT_TOKEN>
-```
+El sistema utiliza autenticación JWT. Para registrarse, envía una solicitud POST a /api/auth/register con los datos del usuario. Para iniciar sesión, usa POST a /api/auth/login con nombre de usuario y contraseña. La respuesta incluirá un token JWT que debes incluir en el encabezado Authorization: Bearer <token> de las solicitudes subsiguientes.
 
 ---
 
@@ -157,7 +105,7 @@ Base path: `/lab/users`
   "nit": "1000474431",
   "email": "karen@demo.test",
   "password": "giovann1",
-  "rol": "seller"
+  "role": "seller"
 }
 ```
 
@@ -342,7 +290,7 @@ mvn "-Dtest=SmokeTest,UserServiceTest,OfferServiceTest,PostServiceTest,JwtUtilTe
 
 **Notes**  
 - En PowerShell, el parámetro `-Dtest` debe ir entre **comillas** si pasas una lista separada por comas.  
-- Los tests de controller están hechos en modo **standalone** (no levantan todo el contexto).
+- Los tests de Controller están hechos en modo **standalone** (no levantan todo el contexto).
 
 ---
 
@@ -356,7 +304,7 @@ mvn "-Dtest=SmokeTest,UserServiceTest,OfferServiceTest,PostServiceTest,JwtUtilTe
   Cambia `--server.port` o libera el puerto:  
   PowerShell:
   ```powershell
-  Get-NetTCPConnection -LocalPort 35000 -State Listen
+  Get-NetTCPConnection -LocalPort 35001 -State Listen
   taskkill /PID <PID> /F
   ```
 
@@ -379,7 +327,7 @@ mvn "-Dtest=SmokeTest,UserServiceTest,OfferServiceTest,PostServiceTest,JwtUtilTe
 `application-lab.yml` highlights:  
 ```yaml
 server:
-  port: 35000
+  port: 35001
 
 spring:
   main:
@@ -399,7 +347,7 @@ src/main/java/io/econexion/
   ├─ lab/users/...
   ├─ weather/...
   ├─ chat/
-  │    ├─ controller/ (ChatController, endpoints REST)
+  │    ├─ Controller/ (ChatController, endpoints REST)
   │    ├─ service/    (ChatService, lógica de negocio)
   │    ├─ repository/ (ChatConversationRepository, ChatMessageRepository)
   │    └─ model/      (ChatConversation, ChatMessage)
@@ -418,12 +366,12 @@ src/main/java/io/econexion/
 
 **Login**
 ```bash
-curl -X POST http://localhost:35000/api/auth/login   -H "Content-Type: application/json"   -d '{"username":"ada","password":"school"}'
+curl -X POST http://localhost:35001/api/auth/login   -H "Content-Type: application/json"   -d '{"username":"ada","password":"school"}'
 ```
 
 **Weather POST (with token)**
 ```bash
-curl -X POST http://localhost:35000/v1/weather/BOG   -H "Authorization: Bearer <TOKEN>"   -H "Content-Type: application/json"   -d '{"weather":{"temp":17.5,"pressure":994.71,"humidity":61}}'
+curl -X POST http://localhost:35001/v1/weather/BOG   -H "Authorization: Bearer <TOKEN>"   -H "Content-Type: application/json"   -d '{"weather":{"temp":17.5,"pressure":994.71,"humidity":61}}'
 ```
 
 ---

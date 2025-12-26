@@ -19,22 +19,22 @@ public class UserService {
         this.repository = repository;
     }
 
-    @PostConstruct
-    public void init() {
-        try {
-            User newUser = new User(
-                    "Econexia",
-                    "administrativo",
-                    "123456789",
-                    "admin@econexia.admin",
-                    passwordEncoder.encode("admin1234"),
-                    "admin"
-            );
-            repository.save(newUser);
-        }catch (Exception e){
-            System.err.println("Error al crear usuario admin: " + e.getMessage());
-        }
-    }
+    // @PostConstruct
+    // public void init() {
+    //     try {
+    //         User newUser = new User(
+    //                 "Econexia",
+    //                 "administrativo",
+    //                 "123456789",
+    //                 "admin@econexia.admin",
+    //                 passwordEncoder.encode("admin1234"),
+    //                 "admin"
+    //         );
+    //         repository.save(newUser);
+    //     }catch (Exception e){
+    //         System.err.println("Error al crear usuario admin: " + e.getMessage());
+    //     }
+    // }
 
     public List<User> findAll() {
 

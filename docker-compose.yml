@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # Servicio de la aplicación Spring Boot
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Build-time arguments
+        JAR_FILE: target/econexion-1.0-SNAPSHOT.jar
+    image: econexion-api:latest
+    container_name: econexion-api
+    ports:
+      - "${APP_PORT:-35001}:35001"
+    networks:
+      - econexion-network
+    volumes:
+      - ./logs:/app/logs
+      - ./application.yml:/app/config/application.yml:ro
+    environment:
+      # Spring Boot configuration
+      SPRING_CONFIG_LOCATION: classpath:/,file:/app/config/application.yml
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-default}
+      
+      # JVM Options para producción
+      JAVA_OPTS: >
+        -Xms512m
+        -Xmx1024m
+        -XX:+UseG1GC
+        -XX:MaxGCPauseMillis=200
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/app/logs/heapdump.hprof
+        -Djava.security.egd=file:/dev/./urandom
+        -Duser.timezone=America/Bogota
+      
+      # Configuración de logging
+      LOGGING_LEVEL_ROOT: ${LOG_LEVEL:-INFO}
+      
+      # Security
+      JWT_SECRET: ${JWT_SECRET:-unSuperSecretoDePrueba1234567890}
+      JWT_EXPIRATION_MINUTES: ${JWT_EXPIRATION:-120}
+      
+      # Google OAuth
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_ANDROID_CLIENT_ID: ${GOOGLE_ANDROID_CLIENT_ID}
+    
+    restart: unless-stopped
+    
+    # Límites de recursos
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 512M
+    
+    # Healthcheck de la aplicación
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:35001/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Configuración de seguridad
+    security_opt:
+      - no-new-privileges:true
+    
+    # Usuario no-root
+    user: "1000:1000"
+
+networks:
+  econexion-network:
+    driver: bridge
+    name: econexion-network

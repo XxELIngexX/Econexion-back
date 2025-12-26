@@ -1,50 +1,13 @@
-server:
-  port: 35000
-
-spring:
-  datasource:
-    url: jdbc:postgresql://172.200.171.97:5432/econexia_db
-    username: postgres
-    password: giovann1
-    driver-class-name: org.postgresql.Driver
-
-  hikari:
-    maximum-pool-size: 10
-    minimum-idle: 2
-    idle-timeout: 600000 # 10 min
-    max-lifetime: 1800000 # 30 min
-    connection-timeout: 30000 # 30s
-
-  jpa:
-    hibernate:
-      ddl-auto: update # o validate / create-drop según lo que quieras
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-  endpoint:
-    health:
-      show-details: when_authorized
-
-jwt:
-  secret: unSuperSecretoDePrueba1234567890
-  expiration-minutes: 120
-
-google:
-  android-client-id: 32986221627-59jc0c9vja9cl7i4150r3ufud38d09pb.apps.googleusercontent.com
-  client-id: 32986221627-1qg0bor77ng5mf5e1kp584t4k5epbe03.apps.googleusercontent.com
-
-# ========= LOGGING =========
-logging:
-  level:
-    root: INFO
-    io.econexion: DEBUG
-  file:
-    name: /app/logs/app.log
-  pattern:
-    file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+services:
+  econexion-api:
+    build: .
+    container_name: econexion-api
+    ports:
+      - "35001:35001"  # Cambié a 35001 para coincidir con tu application.yml
+    environment:
+      # Usa las variables de tu application.yml o sobrescríbelas aquí
+      SPRING_PROFILES_ACTIVE: default
+      # Las otras variables como GOOGLE_CLIENT_ID pueden quedar vacías para desarrollo
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped

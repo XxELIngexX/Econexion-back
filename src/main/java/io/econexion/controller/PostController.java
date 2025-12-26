@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.econexion.dtos.CreatePostDto;
 import io.econexion.model.Post;
 import io.econexion.model.User;
-import io.econexion.security.JwtUtil;
 import io.econexion.service.PostService;
 import io.econexion.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,46 +29,15 @@ import io.swagger.v3.oas.annotations.media.Content;
 public class PostController {
         private PostService postservice;
         private UserService userservice;
-        private JwtUtil jwtUtil;
 
         @Autowired
-        public PostController(PostService postservice, UserService userservice, JwtUtil jwtUtilt) {
+        public PostController(PostService postservice, UserService userservice) {
                 this.postservice = postservice;
                 this.userservice = userservice;
-                this.jwtUtil = jwtUtilt;
         }
 
-        @Operation(summary = "Crear un nuevo post", description = "Crea un nuevo post asociado al usuario autenticado", responses = {
-                        @ApiResponse(responseCode = "200", description = "Post creado exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
-                        @ApiResponse(responseCode = "401", description = "No autorizado, token inválido o ausente"),
-                        @ApiResponse(responseCode = "400", description = "Solicitud inválida") })
-        @PostMapping("/new")
-        public ResponseEntity<?> create(@RequestBody CreatePostDto dto,
-                        @RequestHeader("Authorization") String userToken) throws Exception {
-                System.out.println("aqui entra");
-
-                String token = userToken.substring(7);
-                String email = jwtUtil.extractUserName(token);
-                User user = userservice.findByEmail(email)
-                                .orElseThrow(() -> new Exception("Usuario no encontrado"));
-
-                Post post = new Post();
-                post.setTitle(dto.getTitle());
-                post.setMaterial(dto.getMaterial());
-                post.setQuantity(dto.getQuantity());
-                post.setPrice(dto.getPrice());
-                post.setLocation(dto.getLocation());
-                post.setDescription(dto.getDescription());
-                post.setOwner(user);
-
-                postservice.savePost(post);
-
-                user.getPublications().add(post);
-                userservice.update(user);
-
-                return ResponseEntity.ok().body(user);
-
-        }
+        // 
+        
 
         @Operation(summary = "Obtener un post por ID", description = "Devuelve un post específico por su UUID", responses = {
                         @ApiResponse(responseCode = "200", description = "Post encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Post.class))),
